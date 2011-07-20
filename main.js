@@ -1,5 +1,5 @@
 $(function(){
-  var exampleTrack = {
+  var exampleTracks = [{
     'id': 7864152,
     'created_at': '2010/12/09 12:34:23 +0000',
     'user_id': 1899891,
@@ -46,7 +46,54 @@ $(function(){
     'favoritings_count': 44,
     'comment_count': 0,
     'attachments_uri': 'https://api.soundcloud.com/tracks/7864152/attachments'
-  };
+  }, {
+    'id': 18314454,
+    'created_at': '2011/07/03 12:08:26 +0000',
+    'user_id': 1570627,
+    'duration': 539580,
+    'commentable': true,
+    'state': 'finished',
+    'sharing': 'public',
+    'tag_list': '',
+    'permalink': 'hfrmx007-02-vertical-scb',
+    'description': 'Released on Hotflush Recordings\r\n\r\nhttp://www.mountkimbie.com\r\nhttp://www.myspace.com/mountkimbie\r\nhttp://www.twitter.com/mountkimbie\r\nhttp://www.facebook.com/mountkimbie\r\nhttp://www.youtube.com/user/mountkimbie\r\nhttp://www.last.fm/music/Mount+Kimbie\r\nhttp://www.itunes.com/mountkimbie\r\n',
+    'streamable': true,
+    'downloadable': false,
+    'genre': '',
+    'release': '',
+    'purchase_url': null,
+    'label_id': null,
+    'label_name': '',
+    'isrc': '',
+    'video_url': null,
+    'track_type': '',
+    'key_signature': '',
+    'bpm': null,
+    'title': 'Vertical (SCB Edit)',
+    'release_year': null,
+    'release_month': null,
+    'release_day': null,
+    'original_format': 'wav',
+    'license': 'all-rights-reserved',
+    'uri': 'https://api.soundcloud.com/tracks/18314454',
+    'permalink_url': 'http://soundcloud.com/mountkimbie/hfrmx007-02-vertical-scb',
+    'artwork_url': null,
+    'waveform_url': 'http://w1.sndcdn.com/sCfeoZZ1sN8I_m.png',
+    'user': {
+      'id': 1570627,
+      'permalink': 'mountkimbie',
+      'username': 'mountkimbie',
+      'uri': 'https://api.soundcloud.com/users/1570627',
+      'permalink_url': 'http://soundcloud.com/mountkimbie',
+      'avatar_url': 'http://i1.sndcdn.com/avatars-000004531609-57bkhn-large.jpg?c08a3c2'
+    },
+    'stream_url': 'https://api.soundcloud.com/tracks/18314454/stream',
+    'playback_count': 396,
+    'download_count': 0,
+    'favoritings_count': 12,
+    'comment_count': 5,
+    'attachments_uri': 'https://api.soundcloud.com/tracks/18314454/attachments'
+  }];
   
   var Track = Backbone.Model.extend({
     initialize: function() {
@@ -67,7 +114,10 @@ $(function(){
       this.set({
         is_playing: false,
         playlist_index: 0,
-        playlist: new Playlist([new Track(exampleTrack)])
+        playlist: new Playlist([
+          new Track(exampleTracks[0]),
+          new Track(exampleTracks[1])
+        ])
       });
       this.set({track: this.get('playlist').at(this.get('playlist_index'))});
       console.log('new Player', this.get('track').get('stream_url'));
@@ -79,7 +129,18 @@ $(function(){
     },
     
     skipForward: function(){
-      console.log('fw');
+      var newIndex = 1 + this.get('playlist_index');
+      var playlist = this.get('playlist');
+      if (newIndex >= playlist.length) { // playlist finished
+        this.set({
+          is_playing: false,
+        });
+        newIndex = 0;
+      }
+      this.set({
+        playlist_index: newIndex,
+        track: playlist.at(newIndex)
+      });
     },
     
     skipBackward: function(){
@@ -118,7 +179,7 @@ $(function(){
     changeTrack: function(playerModel, track) {
       if (track) { // bc. of refresh in PlayerView::initialize
         var was_playing = playerModel.get('is_playing');
-        var audio_src = track.get('stream_url') + '?client_id=' + player.get("clientId");
+        var audio_src = track.get('stream_url') + '?client_id=' + player.get('clientId');
         var playerTag = $('audio');
         playerModel.set({is_playing: false}); // should be moved to model
         playerTag.attr('src', audio_src);
