@@ -103,7 +103,6 @@ $(function(){
   
   var Playlist = Backbone.Collection.extend({
     model: Track,
-    
     initialize: function() {
       console.log('new Playlist', this.length)
     }
@@ -113,16 +112,12 @@ $(function(){
     initialize: function() {
       this.set({
         play_status: 'stopped',
-        playlist: new Playlist([
-          new Track(exampleTracks[0]),
-          new Track(exampleTracks[1])
-        ])
+        playlist: window.displayedPlaylist
       });
       this.switchTrack(0);
       console.log('new Player', this.get('track').get('stream_url'));
       
     },
-    
     togglePlayPause: function(){
       var wasPlaying = (this.get('play_status') == 'playing');
       if (wasPlaying) {
@@ -131,35 +126,33 @@ $(function(){
         this.set({play_status: 'playing'});
       }
     },
-    
+    switchPlaylist: function() {
+      this.set({playlist: window.displayedPlaylist});
+    },
+    switchPlaylistAndTrack: function(newIndex) {
+      this.switchPlaylist();
+      this.switchTrack(newIndex);
+    },
     switchTrack: function(newIndex) {
+      var playlist = this.get('playlist');
+      var oldStatus = this.get('play_status');
+      this.set({play_status: 'stopped'});
+      if (newIndex >= playlist.length || newIndex < 0) {
+        newIndex = 0;
+        oldStatus = "stopped";
+      }
       this.set({
         playlist_index: newIndex,
         track: this.get('playlist').at(newIndex)
       });
+      this.set({play_status: oldStatus});
     },
-    
     skipForward: function(){
       var newIndex = this.get('playlist_index') + 1;
-      var playlist = this.get('playlist');
-      if (newIndex >= playlist.length) { // playlist finished
-        this.set({
-          play_status: 'stopped',
-        });
-        newIndex = 0;
-      }
       this.switchTrack(newIndex);
     },
-    
     skipBackward: function(){
       var newIndex = this.get('playlist_index') - 1;
-      var playlist = this.get('playlist');
-      if (newIndex < 0) { // playlist start reached
-        this.set({
-          play_status: 'stopped',
-        });
-        newIndex = 0;
-      }
       this.switchTrack(newIndex);
     }
   });
@@ -170,8 +163,10 @@ $(function(){
       'click #skip_forward': 'skipForward',
       'click #skip_backward': 'skipBackward'
     },
-    
     initialize: function() {
+      $('audio').bind('ended', this.skipForward);
+      $('audio').bind('progress', this.updateProgress);
+      $('audio').bind('timeupdate', this.updateTime);
       window.player.bind('change:play_status', this.changePlayStatus);
       window.player.bind('change:track', this.changeTrack);
       // refresh binding
@@ -180,7 +175,6 @@ $(function(){
       window.player.set({track: oldTrack});
       console.log('new PlayerView')
     },
-    
     changePlayStatus: function(player, playStatus) {
       var playerTag = $('audio').get(0);
       switch (playStatus) {
@@ -199,34 +193,84 @@ $(function(){
           break;
       }
     },
-    
     changeTrack: function(player, track) {
       if (track) { // bc. of refresh in PlayerView::initialize
-        var oldPlayStatus = player.get('play_status');
         var audioSrc = track.get('stream_url') + '?client_id=' + player.get('clientId');
-        player.set({play_status: "stopped"}); // should be moved to model
         $('audio').attr('src', audioSrc);
-        player.set({play_status: oldPlayStatus}); // should be moved to model
+        $('audio').get(0).load();
       }
     },
-    
-    togglePlayPause: function(){
+    togglePlayPause: function() {
       window.player.togglePlayPause();
     },
-    
-    skipForward: function(){
+    skipForward: function() {
       window.player.skipForward();
     },
-    
-    skipBackward: function(){
+    skipBackward: function() {
       window.player.skipBackward();
+    },
+    updateProgress: function() {},
+    updateTime: function() {}
+  });
+  
+  var PlaylistItem = Backbone.Model.extend({}); // TODO: refactor into real model
+  
+  var PlaylistItemView = Backbone.View.extend({
+    tagName:  "li",
+    events: {
+      "click span" : "play"
+    },
+    initialize: function() {
+      console.log('new PlaylistItemView', this.model.get('index'))
+    },
+    render: function() {
+      $(this.el).html('<span>i dont care</span>')
+      return this;
+    },
+    play: function() {
+      console.log('play', this.model.get('index'));
+      window.player.switchPlaylistAndTrack(this.model.get('index'));
     }
   });
   
+  var PlaylistView = Backbone.View.extend({
+    events: {
+    },
+    initialize: function() {
+      window.displayedPlaylist.bind('add',   this.addOne);
+      window.displayedPlaylist.bind('reset', this.addAll);
+      console.log('new PlaylistView')
+    },
+    addOne: function(newTrack) {
+      var idx = newTrack.get('id') == 7864152 ? 0 : 1;
+      var view = new PlaylistItemView({
+        model: new PlaylistItem({
+          index: idx,
+          track: newTrack
+        })
+      });
+      $('ul#item_list').append(view.render().el);
+      console.log('addOn')
+    },
+    addAll: function() {
+      window.displayedPlaylist.each(this.addOne);
+      console.log('addAll')
+    },
+    
+  });
+  
+  window.displayedPlaylist = new Playlist();
+  window.playlistView = new PlaylistView({
+    el: $('div#playlist_view')
+  });
+  window.displayedPlaylist.add([
+    new Track(exampleTracks[0]),
+    new Track(exampleTracks[1])
+  ]);
   window.player = new Player({
     clientId: '821291bd3a5529686cc0067b4189b409'
   });
   window.playerView = new PlayerView({
-    el: $('div#player')
-  })
+    el: $('div#player_view')
+  });
 });
