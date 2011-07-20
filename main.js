@@ -101,8 +101,15 @@ $(function(){
     }
   });
   
+  var PlaylistItem = Backbone.Model.extend({
+    initialize: function() {
+      console.log('new PlaylistItem', this.get('index'), this.get('track').get('id'));
+    }
+  }); // TODO: refactor into real mode
+  
+  
   var Playlist = Backbone.Collection.extend({
-    model: Track,
+    model: PlaylistItem,
     initialize: function() {
       console.log('new Playlist', this.length)
     }
@@ -143,7 +150,7 @@ $(function(){
       }
       this.set({
         playlist_index: newIndex,
-        track: this.get('playlist').at(newIndex)
+        track: this.get('playlist').at(newIndex).get('track')
       });
       this.set({play_status: oldStatus});
     },
@@ -212,9 +219,7 @@ $(function(){
     updateProgress: function() {},
     updateTime: function() {}
   });
-  
-  var PlaylistItem = Backbone.Model.extend({}); // TODO: refactor into real model
-  
+    
   var PlaylistItemView = Backbone.View.extend({
     tagName:  "li",
     events: {
@@ -241,13 +246,9 @@ $(function(){
       window.displayedPlaylist.bind('reset', this.addAll);
       console.log('new PlaylistView')
     },
-    addOne: function(newTrack) {
-      var idx = newTrack.get('id') == 7864152 ? 0 : 1;
+    addOne: function(newPlaylistItem) {
       var view = new PlaylistItemView({
-        model: new PlaylistItem({
-          index: idx,
-          track: newTrack
-        })
+        model: newPlaylistItem
       });
       $('ul#item_list').append(view.render().el);
       console.log('addOn')
@@ -264,8 +265,14 @@ $(function(){
     el: $('div#playlist_view')
   });
   window.displayedPlaylist.add([
-    new Track(exampleTracks[0]),
-    new Track(exampleTracks[1])
+    new PlaylistItem({
+      track: new Track(exampleTracks[0]),
+      index: 0
+    }),
+    new PlaylistItem({
+      track: new Track(exampleTracks[1]),
+      index: 1
+    })
   ]);
   window.player = new Player({
     clientId: '821291bd3a5529686cc0067b4189b409'
