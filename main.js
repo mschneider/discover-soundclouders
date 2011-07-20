@@ -112,39 +112,55 @@ $(function(){
   var Player = Backbone.Model.extend({
     initialize: function() {
       this.set({
-        is_playing: false,
-        playlist_index: 0,
+        play_status: 'stopped',
         playlist: new Playlist([
           new Track(exampleTracks[0]),
           new Track(exampleTracks[1])
         ])
       });
-      this.set({track: this.get('playlist').at(this.get('playlist_index'))});
+      this.switchTrack(0);
       console.log('new Player', this.get('track').get('stream_url'));
       
     },
     
     togglePlayPause: function(){
-      this.set({is_playing: !this.get('is_playing')});
+      var wasPlaying = (this.get('play_status') == 'playing');
+      if (wasPlaying) {
+        this.set({play_status: 'paused'});
+      } else {
+        this.set({play_status: 'playing'});
+      }
     },
     
-    skipForward: function(){
-      var newIndex = 1 + this.get('playlist_index');
-      var playlist = this.get('playlist');
-      if (newIndex >= playlist.length) { // playlist finished
-        this.set({
-          is_playing: false,
-        });
-        newIndex = 0;
-      }
+    switchTrack: function(newIndex) {
       this.set({
         playlist_index: newIndex,
-        track: playlist.at(newIndex)
+        track: this.get('playlist').at(newIndex)
       });
     },
     
+    skipForward: function(){
+      var newIndex = this.get('playlist_index') + 1;
+      var playlist = this.get('playlist');
+      if (newIndex >= playlist.length) { // playlist finished
+        this.set({
+          play_status: 'stopped',
+        });
+        newIndex = 0;
+      }
+      this.switchTrack(newIndex);
+    },
+    
     skipBackward: function(){
-      console.log('bw');
+      var newIndex = this.get('playlist_index') - 1;
+      var playlist = this.get('playlist');
+      if (newIndex < 0) { // playlist start reached
+        this.set({
+          play_status: 'stopped',
+        });
+        newIndex = 0;
+      }
+      this.switchTrack(newIndex);
     }
   });
   
@@ -156,7 +172,7 @@ $(function(){
     },
     
     initialize: function() {
-      window.player.bind('change:is_playing', this.changePlayStatus);
+      window.player.bind('change:play_status', this.changePlayStatus);
       window.player.bind('change:track', this.changeTrack);
       // refresh binding
       var oldTrack = window.player.get('track');
@@ -165,25 +181,32 @@ $(function(){
       console.log('new PlayerView')
     },
     
-    changePlayStatus: function(player, is_playing) {
+    changePlayStatus: function(player, playStatus) {
       var playerTag = $('audio').get(0);
-      if (is_playing) {
-        playerTag.play();
-        $('#toggle_play_pause').text('pause');
-      } else {
-        playerTag.pause();
-        $('#toggle_play_pause').text('play');
+      switch (playStatus) {
+        case 'playing':
+          playerTag.play();
+          $('#toggle_play_pause').text('pause');
+          break;
+        case 'paused':
+          playerTag.pause();
+          $('#toggle_play_pause').text('play');
+          break;
+        case 'stopped':
+          playerTag.pause();
+          playerTag.currentTime=0;
+          $('#toggle_play_pause').text('play');
+          break;
       }
     },
     
-    changeTrack: function(playerModel, track) {
+    changeTrack: function(player, track) {
       if (track) { // bc. of refresh in PlayerView::initialize
-        var was_playing = playerModel.get('is_playing');
-        var audio_src = track.get('stream_url') + '?client_id=' + player.get('clientId');
-        var playerTag = $('audio');
-        playerModel.set({is_playing: false}); // should be moved to model
-        playerTag.attr('src', audio_src);
-        playerModel.set({is_playing: was_playing}); // should be moved to model
+        var oldPlayStatus = player.get('play_status');
+        var audioSrc = track.get('stream_url') + '?client_id=' + player.get('clientId');
+        player.set({play_status: "stopped"}); // should be moved to model
+        $('audio').attr('src', audioSrc);
+        player.set({play_status: oldPlayStatus}); // should be moved to model
       }
     },
     
