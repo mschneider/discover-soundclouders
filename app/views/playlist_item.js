@@ -6,7 +6,7 @@ $(function(){
     },
     
     initialize: function() {
-      console.log('new PlaylistItemView for', this.model);
+      console.log('new PlaylistItemView for', this.model.get('index'), this.model.get('title'));
     },
     
     render: function() {
