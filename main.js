@@ -95,6 +95,50 @@ $(function(){
     'attachments_uri': 'https://api.soundcloud.com/tracks/18314454/attachments'
   }];
   
+  var exampleUsers = [{
+    'id': 1899891,
+    'permalink': 'rabenkind',
+    'username': 'rabenkind',
+    'uri': 'https://api.soundcloud.com/users/1899891',
+    'permalink_url': 'http://soundcloud.com/rabenkind',
+    'avatar_url': 'http://i1.sndcdn.com/avatars-000001867495-p2mbkj-large.jpg?c08a3c2',
+    'country': 'Germany',
+    'full_name': '',
+    'city': 'Berlin',
+    'description': null,
+    'discogs_name': null,
+    'myspace_name': null,
+    'website': null,
+    'website_title': null,
+    'online': false,
+    'track_count': 9,
+    'playlist_count': 1,
+    'public_favorites_count': 238,
+    'followers_count': 24,
+    'followings_count': 13
+  }, {
+    'id': 1570627,
+    'permalink': 'mountkimbie',
+    'username': 'mountkimbie',
+    'uri': 'https://api.soundcloud.com/users/1570627',
+    'permalink_url': 'http://soundcloud.com/mountkimbie',
+    'avatar_url': 'http://i1.sndcdn.com/avatars-000004531609-57bkhn-large.jpg?c08a3c2',
+    'country': 'Britain (UK)',
+    'full_name': 'Mount Kimbie',
+    'city': 'London',
+    'description': 'MOUNT KIMBIE\r\nhttp://www.mountkimbie.com\r\nhttp://www.myspace.com/mountkimbie\r\nhttp://www.twitter.com/mountkimbie\r\nhttp://www.facebook.com/mountkimbie\r\nhttp://www.youtube.com/user/mountkimbie\r\nhttp://www.last.fm/music/Mount+Kimbie\r\nhttp://www.itunes.com/mountkimbie\r\n\r\n',
+    'discogs_name': null,
+    'myspace_name': 'mountkimbie',
+    'website': 'http://www.mountkimbie.com',
+    'website_title': '',
+    'online': false,
+    'track_count': 34,
+    'playlist_count': 7,
+    'public_favorites_count': 0,
+    'followers_count': 4986,
+    'followings_count': 0
+  }];
+  
   var Track = Backbone.Model.extend({
     initialize: function() {
       console.log('new Track', this.get('id'))
@@ -146,7 +190,7 @@ $(function(){
       this.set({play_status: 'stopped'});
       if (newIndex >= playlist.length || newIndex < 0) {
         newIndex = 0;
-        oldStatus = "stopped";
+        oldStatus = 'stopped';
       }
       this.set({
         playlist_index: newIndex,
@@ -221,20 +265,21 @@ $(function(){
   });
     
   var PlaylistItemView = Backbone.View.extend({
-    tagName:  "li",
+    tagName:  'li',
     events: {
-      "click span" : "play"
+      'click span' : 'play'
     },
     initialize: function() {
       console.log('new PlaylistItemView', this.model.get('index'))
     },
     render: function() {
-      $(this.el).html('<span>i dont care</span>')
+      $(this.el).html('<span>' + this.model.get('track').get('title') + '</span>')
       return this;
     },
     play: function() {
-      console.log('play', this.model.get('index'));
       window.player.switchPlaylistAndTrack(this.model.get('index'));
+      window.player.set({play_status: 'playing'});
+      console.log('play', this.model.get('index'));
     }
   });
   
@@ -242,24 +287,112 @@ $(function(){
     events: {
     },
     initialize: function() {
-      window.displayedPlaylist.bind('add',   this.addOne);
+      window.displayedPlaylist.bind('add', this.addOne);
       window.displayedPlaylist.bind('reset', this.addAll);
       console.log('new PlaylistView')
     },
     addOne: function(newPlaylistItem) {
+      console.log('adding playlistItem');
       var view = new PlaylistItemView({
         model: newPlaylistItem
       });
       $('ul#item_list').append(view.render().el);
-      console.log('addOn')
+      console.log('playlist.addOne')
     },
     addAll: function() {
       window.displayedPlaylist.each(this.addOne);
-      console.log('addAll')
+      console.log('playlist.addAll')
     },
-    
   });
   
+  var User = Backbone.Model.extend({
+  });
+  
+  var Userlist = Backbone.Collection.extend({
+    model: User
+  });
+  
+  var UserPlaylistView = Backbone.View.extend({
+    tagName: 'li',
+    events: {
+      'click span.playlist_name' : 'play'
+    },
+    render: function() {
+      $(this.el).html('<span class="playlist_name">playlist</span>');
+      return this;
+    },
+    play: function() {
+      console.log('play!');
+    }
+  });
+  
+  var UserPlaylistsView = Backbone.View.extend({
+    tagName:  'ul',
+    render: function() {
+      for (i = 0; i <= this.model.get('playlist_count'); i = i + 1) {
+        $(this.el).append(new UserPlaylistView().render().el);
+      }
+      return this;
+    }
+  });
+  
+  var UserView = Backbone.View.extend({
+    tagName:  'li',
+    events: {
+      'click span.username' : 'toggleExpanded'
+    },
+    initialize: function() {
+      console.log('new UserView');
+    },
+    render: function() {
+      var innerHTML = '<span class="username">' + this.model.get('username') + '</span>';
+      $(this.el).html(innerHTML);
+      if (this.expanded) {
+        var expandedView = new UserPlaylistsView({
+          model: this.model
+        });
+        $(this.el).append(expandedView.render().el)
+      }
+      return this;
+    },
+    toggleExpanded: function() {
+      this.expanded = !this.expanded;
+      this.render();
+      console.log('toggleExpanded', this.expanded);
+    }
+  });
+  
+  
+  var UserlistView = Backbone.View.extend({
+    events: {
+    },
+    initialize: function() {
+      window.userList.bind('add', this.addOne);
+      window.userList.bind('reset', this.addAll);
+      console.log('new UserlistView')
+    },
+    addOne: function(newUser) {
+      var view = new UserView({
+        model: newUser
+      });
+      view.expanded = false;
+      $('ul#user_list').append(view.render().el);
+      console.log('userlist.addOne', newUser.get('id'))
+    },
+    addAll: function() {
+      window.displayedPlaylist.each(this.addOne);
+      console.log('userlist.addAll')
+    },
+  });
+  
+  window.userList = new Userlist();
+  window.userListView = new UserlistView({
+    el: $('div#userlist_view')
+  });
+  window.userList.add([
+    new User(exampleUsers[0]),
+    new User(exampleUsers[1])
+  ]);
   window.displayedPlaylist = new Playlist();
   window.playlistView = new PlaylistView({
     el: $('div#playlist_view')
