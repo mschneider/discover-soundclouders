@@ -21,7 +21,6 @@ $(function(){
       // TODO build subviews
     },
     changePlayStatus: function(player, playStatus) {
-      console.log('view observed playstatus change', playStatus);
       switch (playStatus) {
         case 'playing':
           $('audio').get(0).play();
@@ -42,7 +41,6 @@ $(function(){
       var audioSrc = '';
       if (track)
         audioSrc = track.get('stream_url') + '?client_id=' + App.client_id;
-      console.log('view observed track change', audioSrc);
       $('audio').attr('src', audioSrc);
       $('audio').get(0).load();
     },

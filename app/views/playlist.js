@@ -2,23 +2,16 @@ $(function(){
   PlaylistView = Backbone.View.extend({
     
     initialize: function() {
-      var that = this; //srsjs..
-      this.model.bind('change:playlist', function() {
-        that.rebuildItemsView();
-      });
-      this.rebuildItemsView();
-    },
-    
-    rebuildItemsView: function() {
-      this.itemsView = new PlaylistItemsView({
-        model: this.model.get('playlist').get('items')
-      });
-      this.render();
+      var that = this;
+      this.model.bind('change:playlist', function() {that.render();});
     },
     
     render: function() {
       $(this.el).html('');
-      $(this.el).append(this.itemsView.render().el);
+      var itemsView = new PlaylistItemsView({
+        model: this.model.get('playlist').get('items')
+      });
+      $(this.el).append(itemsView.render().el);
       return this;
     }
   });

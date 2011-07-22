@@ -5,12 +5,8 @@ $(function(){
       'dblclick' : 'play'
     },
     
-    initialize: function() {
-      console.log('new PlaylistItemView for', this.model.get('index'), this.model.get('title'));
-    },
-    
     render: function() {
-      $(this.el).html('<span>' + this.model.get('title') + '</span>')
+      $(this.el).html(this.model.get('title'))
       return this;
     },
     

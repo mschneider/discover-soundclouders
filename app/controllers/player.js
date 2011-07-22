@@ -26,7 +26,6 @@ $(function(){
     switchTrack: function(newIndex) {
       var playlistItems = this.get('playlist').get('items');
       var oldStatus = this.get('play_status');
-      console.log('controller switching track', newIndex, oldStatus);
       this.set({play_status: 'stopped'});
       if (newIndex >= playlistItems.length || newIndex < 0) {
         this.set({

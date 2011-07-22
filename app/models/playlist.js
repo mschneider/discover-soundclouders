@@ -19,4 +19,8 @@ $(function(){
       }
     }
   });
+  
+  PlaylistList = Backbone.Collection.extend({
+    model: Playlist
+  })
 });
