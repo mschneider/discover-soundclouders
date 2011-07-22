@@ -1,5 +1,5 @@
 $(function(){
-  SearchView = Backbone.View.extend({
+  PlaylistNameView = Backbone.View.extend({
     tagName: 'li',
     events: {
       'click' : 'display'
@@ -10,7 +10,7 @@ $(function(){
     },
     
     render: function() {
-      $(this.el).html(this.model.get('search_term'));
+      $(this.el).html(this.model.get('name'));
       return this;
     }
   });

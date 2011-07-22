@@ -4,7 +4,8 @@ $(function(){
     
     initialize: function() {
       this.set({
-        searches: new PlaylistList()
+        searches: new PlaylistList(),
+        users: new UserList()
       });
     },
     
@@ -23,7 +24,7 @@ $(function(){
           console.log('success', query, tracks);
           var searchResult = new Playlist({
               items: new PlaylistItemList(tracks),
-              search_term: query
+              name: '"' + query + '"'
           });
           that.get('searches').add(searchResult);
           App.displayedPlaylist.set({playlist: searchResult});
