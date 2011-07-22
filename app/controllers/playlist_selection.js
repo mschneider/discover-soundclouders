@@ -21,7 +21,6 @@ $(function(){
         data: requestData,
         dataType: 'jsonp',
         success: function(tracks) {
-          console.log('success', query, tracks);
           var searchResult = new Playlist({
               items: new PlaylistItemList(tracks),
               name: '"' + query + '"'

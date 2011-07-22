@@ -21,6 +21,13 @@ $(function(){
   });
   
   PlaylistList = Backbone.Collection.extend({
-    model: Playlist
+    model: Playlist,
+    
+    addPlaylistWithName: function(playlistItems, playlistName) {
+      this.add(new Playlist({
+          items: new PlaylistItemList(playlistItems),
+          name: playlistName
+      }));
+    }
   })
 });

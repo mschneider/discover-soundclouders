@@ -5,6 +5,7 @@ $(function(){
     displayedPlaylist: new DisplayedPlaylistController(),
     playlistSelection: new PlaylistSelectionController()
   };
+  // views
   var playerView = new PlayerView({
     model: App.player,
     el: $('div#player_view')
@@ -17,5 +18,12 @@ $(function(){
     model: App.playlistSelection,
     el: $('div#playlist_selection_view')
   }).render();
-  App.playlistSelection.addSearch('rabenkind');
+  // misc
+  User.fromPermalink('mountkimbie', function(user) {
+    App.playlistSelection.get('users').add(user)
+  });
+  User.fromPermalink('rabenkind', function(user) {
+    App.playlistSelection.get('users').add(user)
+  });
+  App.playlistSelection.addSearch('Scuba vs SCB Resident Advisor Mix');
 });
