@@ -1,16 +1,18 @@
 $(function(){
-  PlaylistView = Backbone.View.extend({
+  PlaylistTracksView = Backbone.View.extend({
     
     initialize: function() {
       var that = this;
-      this.model.bind('change:playlist', function() {that.render();});
+      this.controller = this.model;
+      this.controller.bind('change:playlist', function() {that.render();});
     },
     
     render: function() {
-      $(this.el).html('');
+      $(this.el).html('Playlist');
       var itemsView = new PlaylistItemsView({
         model: this.model.get('playlist').get('items')
       });
+      itemsView.controller = this.controller;
       $(this.el).append(itemsView.render().el);
       return this;
     }

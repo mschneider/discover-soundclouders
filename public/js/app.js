@@ -10,7 +10,7 @@ $(function(){
     model: App.player,
     el: $('div#player_view')
   });
-  var playlistView = new PlaylistView({
+  var playlistTracksView = new PlaylistTracksView({
     model: App.displayedPlaylist,
     el: $('div#playlist_view')
   }).render();

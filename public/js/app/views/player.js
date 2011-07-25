@@ -6,10 +6,10 @@ $(function(){
       'click #skip_backward': 'skipBackward'
     },
     initialize: function() {
-      // audio tag - events
-      $('audio').bind('ended', this.skipForward);
-      $('audio').bind('progress', this.updateProgress);
-      $('audio').bind('timeupdate', this.updateTime);
+      var that = this;
+      $('audio').bind('ended', function(){that.skipForward();});
+      $('audio').bind('progress', function(){that.updateProgress();});
+      $('audio').bind('timeupdate', function(){that.updateTime();});
       // naming things the right way
       this.controller = this.model; 
       // bind and initialize current track
@@ -53,7 +53,7 @@ $(function(){
     skipBackward: function() {
       this.controller.skipBackward();
     },
-    updateProgress: function() {}, // TODO subview
-    updateTime: function() {} // TODO subview
+    updateProgress: function() {}, // TODO
+    updateTime: function() {} // TODO 
   }); 
 });

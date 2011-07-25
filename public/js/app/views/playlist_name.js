@@ -6,7 +6,7 @@ $(function(){
     },
     
     display: function() {
-      App.displayedPlaylist.set({playlist: this.model});
+      App.displayedPlaylist.display(this.model);
     },
     
     render: function() {
