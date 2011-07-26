@@ -31,6 +31,10 @@ $(function(){
       this.set({playlist: newPlaylist})
     },
     
+    drag: function(sourceItem, destinationItem) {
+      this.get('playlist').moveTrack(sourceItem, destinationItem);
+    },    
+    
     play: function(item) {
       App.player.switchPlaylistAndTrack(this.get('playlist'), item.get('index'));
       App.player.set({play_status: 'playing'});
@@ -45,18 +49,6 @@ $(function(){
       this.deselectAll();
       item.set({selected: true});
       this.set({selected: new PlaylistItemList([item])});   
-    },
-
-    mouseDownOn: function(item) {
-      this.set({lastDownOn: item});
-    },
-
-    mouseUpOn: function(dragTarget, modifierPressed) {
-      var dragSource = this.get('lastDownOn');
-      if (dragSource != dragTarget)
-        this.get('playlist').moveTrack(dragSource, dragTarget);
-      else // mouse did not move - was a regular click
-        this.click(dragTarget, modifierPressed);
     }
   });
 });

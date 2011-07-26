@@ -2,11 +2,14 @@ $(function(){
   PlaylistNameView = Backbone.View.extend({
     tagName: 'li',
     events: {
-      'click' : 'display'
+      'mouseup' : 'mouseUp'
     },
     
-    display: function() {
-      App.displayedPlaylist.display(this.model);
+    mouseUp: function() {
+      if (!this.model.get('editable')) 
+        return true; // pass off to library event handler
+      App.library.mouseUpOnPlaylistName(this.model);
+      return false;
     },
     
     render: function() {

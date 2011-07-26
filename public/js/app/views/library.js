@@ -1,8 +1,15 @@
 $(function(){
   LibraryView = Backbone.View.extend({
+    events: {
+      'mouseup' : 'mouseUp'
+    },
     
     initialize: function() {
       this.controller = this.model;
+    },
+    
+    mouseUp: function() {
+      this.controller.mouseUpOnLibrary();
     },
     
     render: function() {

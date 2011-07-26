@@ -68,10 +68,11 @@ $(function(){
   PlaylistList = Backbone.Collection.extend({
     model: Playlist,
     
-    addPlaylistWithName: function(playlistItems, playlistName) {
+    addPlaylistWithName: function(playlistItems, playlistName, playlistIsEditable) {
       this.add(new Playlist({
           items: new PlaylistItemList(playlistItems),
-          name: playlistName
+          name: playlistName,
+          editable: playlistIsEditable
       }));
     }
   })

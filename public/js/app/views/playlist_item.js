@@ -19,11 +19,13 @@ $(function(){
     },
     
     mouseDown: function(event) {
-      this.controller.mouseDownOn(this.model);
+      App.library.mouseDownOnPlaylistItem(this.model);
+      return false;
     },
     
     mouseUp: function(event) {
-      this.controller.mouseUpOn(this.model, event.ctrlKey || event.metaKey);
+      App.library.mouseUpOnPlaylistItem(this.model, event.ctrlKey || event.metaKey);
+      return false;
     },
     
     updateSelection: function() {

@@ -20,8 +20,9 @@ $(function(){
     gatherPlaylists: function(cb) {
       var that = this, tracks, favorites, finish = function() {
         if (tracks && favorites) {
-          that.get('playlists').addPlaylistWithName(tracks, 'Tracks');
-          that.get('playlists').addPlaylistWithName(favorites, 'Favorites');
+          that.get('playlists').addPlaylistWithName(tracks, 'Tracks', false);
+          that.get('playlists').addPlaylistWithName(favorites, 'Favorites', false);
+          that.get('playlists').addPlaylistWithName([], 'Custom', true);
           cb(that);
         } 
       };
