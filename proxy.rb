@@ -7,5 +7,8 @@ get '/login' do
 end
 
 get '/oauth' do
-  params[:code] + '|' + params[:access_token] + '|' + params[:expires_in]
+  code =  params[:code] || 'nil'
+  access_token =  params[:access_token] || 'nil'
+  expires_in = params[:expires_in] || 'nil'
+  code + '|' + access_token + '|' + expires_in
 end
