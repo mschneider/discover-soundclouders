@@ -2,6 +2,7 @@ $(function(){
   App = {
     client_id: '821291bd3a5529686cc0067b4189b409',
     player: new PlayerController(),
+    library: new LibraryController(),
     displayedPlaylist: new DisplayedPlaylistController(),
     playlistSelection: new PlaylistSelectionController()
   };
@@ -10,13 +11,9 @@ $(function(){
     model: App.player,
     el: $('div#player_view')
   });
-  var playlistView = new PlaylistView({
-    model: App.displayedPlaylist,
-    el: $('div#playlist_view')
-  }).render();
-  var playlistSelectionView = new PlaylistSelectionView({
-    model: App.playlistSelection,
-    el: $('div#playlist_selection_view')
+  var libraryView = new LibraryView({
+    model: App.library,
+    el: $('div#library_view')
   }).render();
 
   User.fromPermalink('mountkimbie', function(user) {
@@ -25,5 +22,5 @@ $(function(){
   User.fromPermalink('rabenkind', function(user) {
     App.playlistSelection.get('users').add(user)
   });
-  App.playlistSelection.addSearch('Scuba vs SCB Resident Advisor Mix');
+  App.playlistSelection.addSearch('Scuba vs SCB');
 });

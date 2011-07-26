@@ -1,5 +1,7 @@
 $(function(){
   PlaylistView = Backbone.View.extend({
+    className: 'Playlist',
+    tagName: 'div',
     
     initialize: function() {
       var that = this;
@@ -8,7 +10,7 @@ $(function(){
     },
     
     render: function() {
-      $(this.el).html('Playlist');
+      $(this.el).html('Selected Playlist:');
       var itemsView = new PlaylistItemsView({
         model: this.model.get('playlist').get('items')
       });

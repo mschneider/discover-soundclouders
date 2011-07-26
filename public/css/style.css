@@ -4,10 +4,17 @@
     -moz-user-select: none;
     -o-user-select: none;
     user-select: none;
+    list-style-type: none;
 }
 
-.Playlist {
-    list-style-type: none;
+div.PlaylistSelection {
+    float:left;
+    width: 20%;
+}
+
+div.Playlist {
+    float: right;
+    width: 80%;
 }
 
 .PlaylistItem {
