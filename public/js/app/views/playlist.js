@@ -1,5 +1,5 @@
 $(function(){
-  PlaylistTracksView = Backbone.View.extend({
+  PlaylistView = Backbone.View.extend({
     
     initialize: function() {
       var that = this;

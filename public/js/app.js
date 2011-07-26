@@ -5,12 +5,12 @@ $(function(){
     displayedPlaylist: new DisplayedPlaylistController(),
     playlistSelection: new PlaylistSelectionController()
   };
-  // views
+
   var playerView = new PlayerView({
     model: App.player,
     el: $('div#player_view')
   });
-  var playlistTracksView = new PlaylistTracksView({
+  var playlistView = new PlaylistView({
     model: App.displayedPlaylist,
     el: $('div#playlist_view')
   }).render();
@@ -18,7 +18,7 @@ $(function(){
     model: App.playlistSelection,
     el: $('div#playlist_selection_view')
   }).render();
-  // misc
+
   User.fromPermalink('mountkimbie', function(user) {
     App.playlistSelection.get('users').add(user)
   });

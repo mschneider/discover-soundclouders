@@ -14,7 +14,7 @@ $(function(){
     },
     
     render: function() {
-      $(this.el).html(this.model.escape('title'));
+      $(this.el).html(ich.playlist_item(this.model.attributes, true));
       return this;
     },
     
