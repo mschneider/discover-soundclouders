@@ -31,9 +31,22 @@ $(function(){
       this.set({playlist: newPlaylist})
     },
     
-    drag: function(sourceItem, destinationItem) {
-      this.get('playlist').moveTrack(sourceItem, destinationItem);
-    },    
+    dragOnTrack: function(sourceItem, destinationItem) {
+      if (this.get('playlist').get('editable'))
+        this.get('playlist').moveTrack(sourceItem, destinationItem);
+    },
+    
+    dragOnPlaylist: function(item, playlist) {
+      if (playlist.get('editable')) {
+        if (item.get('selected')) {
+          var selectedItems = this.get('selected');
+          this.deselectAll(); // else the selectedItems will be cloned selected
+          playlist.addTrackList(selectedItems);
+        } else {
+          playlist.addTrack(item.clone());
+        }
+      }
+    },
     
     play: function(item) {
       App.player.switchPlaylistAndTrack(this.get('playlist'), item.get('index'));

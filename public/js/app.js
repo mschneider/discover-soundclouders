@@ -17,10 +17,10 @@ $(function(){
   }).render();
 
   User.fromPermalink('mountkimbie', function(user) {
-    App.playlistSelection.get('users').add(user)
+    App.playlistSelection.get('users').add(user);
   });
   User.fromPermalink('rabenkind', function(user) {
-    App.playlistSelection.get('users').add(user)
+    App.playlistSelection.get('users').add(user);
   });
   App.playlistSelection.addSearch('Scuba vs SCB');
 });

@@ -11,38 +11,53 @@ $(function(){
     }
   });
   
+  PlaylistItemList.formatTime = function(duration) {
+    var hours = Math.floor(duration / 3600),
+        minutes = Math.floor((duration / 60) % 60),
+        seconds = Math.floor(duration % 60),
+        result = '';
+    if (hours > 0)
+      result += hours + ':';
+    if (minutes > 0 || hours > 0) {
+      if (hours > 0 && minutes < 10)
+        result += '0';
+      result += minutes + ':';
+      if (seconds < 10)
+        result += '0';
+    }
+    result += seconds;
+    return result;
+  };
+  
+  PlaylistItemList.fromSoundcloud = function(items){
+    for (var i = 0; i < items.length; i += 1) {
+      var item = items[i];
+      item.index = i;
+      item.formatted_time = this.formatTime(item.duration / 1000);
+    }
+    return new PlaylistItemList(items);
+  };
+  
   Playlist = Backbone.Model.extend({
     
     initialize: function() {
       if (!this.get('items')) {
         this.set({items: new PlaylistItemList});
       }
-      for (var i = 0; i < this.get('items').length; i += 1) {
-        var item = this.get('items').at(i);
-        item.set({
-          index: i,
-          formatted_time: this.formatTime(item)
-        });
-      }
     },
-      
-    formatTime: function(item) {
-      var duration = Math.floor(item.get('duration') / 1000);
-      var hours = Math.floor(duration / 3600),
-          minutes = Math.floor((duration / 60) % 60),
-          seconds = duration % 60;
-      var result = '';
-      if (hours > 0)
-        result += hours + ':';
-      if (minutes > 0 || hours > 0) {
-        if (hours > 0 && minutes < 10)
-          result += '0';
-        result += minutes + ':';
-        if (seconds < 10)
-          result += '0';
-      }
-      result += seconds;
-      return result;
+    
+    addTrack: function(item) {
+      var newIndex = this.get('items').length;
+      item.set({index: newIndex});
+      this.get('items').add(item);
+    },
+    
+    addTrackList: function(itemList) {
+      itemList.sort({silent: true});
+      var that = this;
+      itemList.forEach(function(item) {
+        that.addTrack(item.clone());
+      })
     },
     
     moveTrack: function(source, destination) {
@@ -69,11 +84,12 @@ $(function(){
     model: Playlist,
     
     addPlaylistWithName: function(playlistItems, playlistName, playlistIsEditable) {
-      this.add(new Playlist({
-          items: new PlaylistItemList(playlistItems),
+      var newPlaylist = new Playlist({
+          items: PlaylistItemList.fromSoundcloud(playlistItems),
           name: playlistName,
           editable: playlistIsEditable
-      }));
+      });
+      this.add(newPlaylist);
     }
   })
 });

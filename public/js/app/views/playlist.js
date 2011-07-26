@@ -10,11 +10,10 @@ $(function(){
     },
     
     render: function() {
-      $(this.el).html('Selected Playlist:');
+      $(this.el).html('');
       var itemsView = new PlaylistItemsView({
-        model: this.model.get('playlist').get('items')
+        model: this.controller.get('playlist').get('items')
       });
-      itemsView.controller = this.controller;
       $(this.el).append(itemsView.render().el);
       return this;
     }

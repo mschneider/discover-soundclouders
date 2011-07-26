@@ -29,7 +29,7 @@ $(function(){
           App.displayedPlaylist.click(item, modifierPressed);
           break;
         case 'dragging':
-          App.displayedPlaylist.drag(this.get('dragged'), item);
+          App.displayedPlaylist.dragOnTrack(this.get('dragged'), item);
           this.resetState();
           break;
       }
@@ -42,7 +42,7 @@ $(function(){
           App.displayedPlaylist.display(playlist);
           break;
         case 'dragging':
-          console.log(this.get('dragged'), 'dragged on playlistname', playlist);
+          App.displayedPlaylist.dragOnPlaylist(this.get('dragged'), playlist);
           this.resetState();
           break;
       }

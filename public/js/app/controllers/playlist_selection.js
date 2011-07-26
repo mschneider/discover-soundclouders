@@ -22,8 +22,8 @@ $(function(){
         dataType: 'jsonp',
         success: function(tracks) {
           var searchResult = new Playlist({
-              items: new PlaylistItemList(tracks),
-              name: '"' + query + '"'
+            items: PlaylistItemList.fromSoundcloud(tracks),
+            name: '"' + query + '"'
           });
           that.get('searches').add(searchResult);
           App.displayedPlaylist.set({playlist: searchResult});

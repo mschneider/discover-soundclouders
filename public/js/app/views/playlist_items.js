@@ -15,7 +15,6 @@ $(function(){
           index: i,
           model: this.model.at(i)
         });
-        itemView.controller = this.controller;
         $(this.el).append(itemView.render().el)
       }
       return this;
