@@ -1,14 +1,36 @@
 require 'sinatra'
 require 'soundcloud'
 
+set :sessions, true
+set :soundcloud, {
+  :client_id => ENV['CLIENT_ID'],
+  :client_secret => ENV['CLIENT_SECRET'],
+  :redirect_uri => 'http://localhost:9292/oauth',
+  :site => 'soundcloud.com'
+}
+
+get '/' do
+  if !session[:soundcloud]
+    session.clear
+    redirect '/login'
+  end
+  soundcloud_connection = Soundcloud.new(session[:soundcloud].merge settings.soundcloud)
+  if soundcloud_connection.expired?
+    'refresh needed'
+  else
+    'Hello World'
+  end
+end
+
 get '/login' do
-  client = Soundcloud.new({:client_id => '6c574a63595f5f55c82cd58f945f932a'})
-  redirect client.authorize_url(:redirect_uri => 'http://soundbone.herokuapp.com/oauth')
+  redirect Soundcloud.new(settings.soundcloud).authorize_url
 end
 
 get '/oauth' do
-  code =  params[:code] || 'nil'
-  access_token =  params[:access_token] || 'nil'
-  expires_in = params[:expires_in] || 'nil'
-  code + '|' + access_token + '|' + expires_in
+  soundcloud_connection = Soundcloud.new settings.soundcloud
+  response = soundcloud_connection.exchange_token :code => params[:code]
+  session[:soundcloud] = soundcloud_connection.options.select do |key,value|
+    [:access_token, :refresh_token, :expires_at].include? key
+  end
+  redirect '/'
 end
