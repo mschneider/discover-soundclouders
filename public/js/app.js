@@ -1,6 +1,6 @@
 $(function(){
   App = {
-    client_id: '821291bd3a5529686cc0067b4189b409',
+    client_id: '6c574a63595f5f55c82cd58f945f932a',
     player: new PlayerController(),
     library: new LibraryController(),
     displayedPlaylist: new DisplayedPlaylistController(),
