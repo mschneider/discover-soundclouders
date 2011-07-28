@@ -14,12 +14,7 @@ get '/' do
     session.clear
     redirect '/login'
   end
-  soundcloud_connection = Soundcloud.new(session[:soundcloud].merge settings.soundcloud)
-  if soundcloud_connection.expired?
-    'refresh needed'
-  else
-    'Hello World'
-  end
+  'Hello World'
 end
 
 get '/login' do
@@ -28,7 +23,7 @@ end
 
 get '/oauth' do
   soundcloud_connection = Soundcloud.new settings.soundcloud
-  response = soundcloud_connection.exchange_token :code => params[:code]
+  soundcloud_connection.exchange_token :code => params[:code]
   session[:soundcloud] = soundcloud_connection.options.select do |key,value|
     [:access_token, :refresh_token, :expires_at].include? key
   end
