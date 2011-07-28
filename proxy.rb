@@ -1,6 +1,7 @@
-require 'sinatra'
-require 'soundcloud'
 require 'json'
+require 'sinatra'
+require "sinatra/namespace"
+require 'soundcloud'
 
 set :sessions, true
 set :soundcloud, {
@@ -17,11 +18,14 @@ get '/' do
   'Hello World'
 end
 
-get '/followings' do
-  soundcloud = Soundcloud.new(settings.soundcloud.merge session[:soundcloud])
-  user_id = soundcloud.get('/me').id
-  followings = soundcloud.get("/users/#{user_id}/followings")
-  followings.to_json
+namespace '/me' do
+  get '/followings' do
+    error 401, 'Authorize under /login first!' unless session[:soundcloud]
+    soundcloud = Soundcloud.new settings.soundcloud.merge session[:soundcloud]
+    user_id = soundcloud.get('/me').id
+    followings = soundcloud.get("/users/#{user_id}/followings")
+    followings.to_json
+  end
 end
 
 get '/login' do

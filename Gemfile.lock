@@ -30,6 +30,8 @@ GEM
     sinatra (1.2.6)
       rack (~> 1.1)
       tilt (>= 1.2.2, < 2.0)
+    sinatra-namespace (0.6.1)
+      sinatra (~> 1.1)
     soundcloud (0.2.4)
       hashie
       httmultiparty (~> 0.3.0)
@@ -44,4 +46,5 @@ DEPENDENCIES
   rack-test
   rspec
   sinatra
+  sinatra-namespace
   soundcloud

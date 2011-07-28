@@ -12,6 +12,41 @@ describe 'SoundcloudProxy' do
     end
   end
   
+  describe 'GET /me/followings' do
+    it 'should return an error for unauthorized users' do
+      get '/me/followings'
+      last_response.should be_client_error
+    end
+    
+    it "should return the current user's followings as json" do
+      current_user = Soundcloud::HashResponseWrapper.new({:id => 'stubid'})
+      followings = Soundcloud::ArrayResponseWrapper.new [{:stub => 1}]
+      Soundcloud.any_instance.should_receive(:get).twice do |url|
+        case url
+        when '/me'
+          current_user
+        when '/users/stubid/followings'
+          followings
+        end
+      end
+      get '/me/followings', {}, {'rack.session'=>{'soundcloud'=>{}}}
+      last_response.should be_ok
+      last_response.body.should == followings.to_json
+    end
+  end
+  
+  describe 'GET /me/recommended/:id' do   
+    it 'should return an error for unauthorized users' do
+      get '/me/recommended/1'
+      last_response.should be_client_error
+    end
+    
+    it "should return the current user's recommendations based on the given user" do
+      get '/me/rocommended/stubid'
+      last_response.should be_ok
+    end
+  end
+  
   describe 'GET /login' do
     it 'should redirect to the Soundcloud OAuth connector' do
       Soundcloud.any_instance.should_receive(:authorize_url).and_return('http://stub/a?b=c')
