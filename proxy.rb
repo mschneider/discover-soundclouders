@@ -1,5 +1,6 @@
 require 'sinatra'
 require 'soundcloud'
+require 'json'
 
 set :sessions, true
 set :soundcloud, {
@@ -11,14 +12,25 @@ set :soundcloud, {
 
 get '/' do
   if !session[:soundcloud]
-    session.clear
     redirect '/login'
   end
   'Hello World'
 end
 
+get '/followings' do
+  soundcloud = Soundcloud.new(settings.soundcloud.merge session[:soundcloud])
+  user_id = soundcloud.get('/me').id
+  followings = soundcloud.get("/users/#{user_id}/followings")
+  followings.to_json
+end
+
 get '/login' do
-  redirect Soundcloud.new(settings.soundcloud).authorize_url
+  redirect Soundcloud.new(settings.soundcloud).authorize_url + "&scope=non-expiring"
+end
+
+get '/logout' do
+  session.clear
+  redirect '/'
 end
 
 get '/oauth' do

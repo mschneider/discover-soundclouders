@@ -14,9 +14,9 @@ describe 'SoundcloudProxy' do
   
   describe 'GET /login' do
     it 'should redirect to the Soundcloud OAuth connector' do
-      Soundcloud.any_instance.should_receive(:authorize_url).and_return('http://stubconnector')
+      Soundcloud.any_instance.should_receive(:authorize_url).and_return('http://stub/a?b=c')
       get '/login'
-      last_response.should be_redirected_to 'http://stubconnector'
+      last_response.should be_redirected_to 'http://stub/a?b=c&scope=non-expiring'
     end
   end
   
