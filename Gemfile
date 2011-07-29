@@ -4,8 +4,14 @@ gem 'sinatra'
 gem 'sinatra-namespace'
 gem 'soundcloud'
 
+group :development do
+  gem 'shotgun'
+end
+
 group :test do
-  gem 'rspec'
+  gem 'fakeweb'
   gem 'fuubar'
   gem 'rack-test'
+  gem 'rspec'
+  gem 'timecop'
 end

@@ -1,5 +1,7 @@
 require './proxy'
 require 'rack/test'
+require 'fakeweb'
+require 'timecop'
 
 RSpec.configure do |conf|
   conf.include Rack::Test::Methods
