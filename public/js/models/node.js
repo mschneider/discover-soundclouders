@@ -13,7 +13,7 @@ $(function(){
         .value();
       var directedDistance = this.position.distanceTo(other.position);
       var equilibriumDistance = directedDistance.normalized().scaledBy(100);
-      return directedDistance.minus(equilibriumDistance).scaledBy(weight);
+      return directedDistance.minus(equilibriumDistance).scaledBy(2 * weight);
     },
     
     forceBetween: function(other) {
@@ -23,7 +23,7 @@ $(function(){
     repulsionFrom: function(other) {
       var directedDistance = this.position.distanceTo(other.position);
       var distance = directedDistance.magnitude();
-      var factor = -1 * 1000 / (distance * distance);
+      var factor = -1 * 10000 / (distance * distance);
       return directedDistance.normalized().scaledBy(factor);
     }
     

@@ -21,7 +21,7 @@ $(function(){
   };
 
   Vector.prototype.normalized = function() {
-    return this.scaledBy( 1 / this.magnitude());
+    return this.scaledBy(1 / this.magnitude());
   };
 
   Vector.prototype.scaledBy = function(factor) {
