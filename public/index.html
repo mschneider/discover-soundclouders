@@ -5,45 +5,24 @@
     <title>Soundcloud.js</title>
     <link href='css/style.css' rel='stylesheet' type='text/css'>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.1.7/underscore-min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/json2/20110223/json2.js"></script>
-    <!-- <script src="js/vendor/ICanHaz.min.js"></script> -->
-    <script src="js/vendor/ICanHaz.js"></script>
-    <script id="playlist_item" type="text/html">
-      <span class="index">{{index}}</span>
-      <span class="title">{{title}}</span>
-      <span class="time">{{formatted_time}}</span>
-    </script>
     <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/0.5.1/backbone-min.js"></script> -->
     <script src="js/vendor/backbone.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0.beta2/handlebars.min.js"></script>
     <!-- <script type="text/javascript" src="http://connect.soundcloud.com/2/beta.js"></script> -->
-    <script src="js/app/controllers/displayed_playlist.js"></script>
-    <script src="js/app/controllers/library.js"></script>
-    <script src="js/app/controllers/player.js"></script>
-    <script src="js/app/controllers/playlist_selection.js"></script>
-    <script src="js/app/models/playlist.js"></script>
-    <script src="js/app/models/user.js"></script>
-    <script src="js/app/views/library.js"></script>
-    <script src="js/app/views/player.js"></script>
-    <script src="js/app/views/playlist.js"></script>
-    <script src="js/app/views/playlist_item.js"></script>
-    <script src="js/app/views/playlist_items.js"></script>
-    <script src="js/app/views/playlist_name.js"></script>
-    <script src="js/app/views/playlist_selection.js"></script>
-    <script src="js/app/views/searches.js"></script>
-    <script src="js/app/views/user_playlists.js"></script>
+    <script src="js/util/position_generator.js"></script>
+    <script src="js/util/vector.js"></script>
+    <script src="js/models/node.js"></script>
+    <script src="js/views/recommendations.js"></script>
+    <script src="js/views/user.js"></script>
     <script src="js/app.js"></script>
   </head>
   <body>
-    <div id="player_view">
-      <a id="toggle_play_pause">play</a>
-      <a id="skip_forward">skip_forward</a>
-      <a id="skip_backward">skip_backard</a>
-      <audio></audio>
-    </div>
-    <div id="library_view">
-    </div>
+    <canvas id="recommendations_view"></canvas>
+    <div class="user_details" id="user_view"></div>
+    <script id="user-template" type="text/x-handlebars-template">
+      User selected!
+    </script>
   </body>
 </html>
