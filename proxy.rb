@@ -1,7 +1,9 @@
 require 'json'
 require 'sinatra'
-require "sinatra/namespace"
+require 'sinatra/namespace'
 require 'soundcloud'
+$LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), 'lib'))
+require 'soundcloudcache'
 
 set :sessions, true
 set :soundcloud, {
@@ -15,21 +17,33 @@ get '/' do
   if !session[:soundcloud]
     redirect '/login'
   end
-  'Hello World'
+  File.read(File.join('public', 'index.html'))
 end
 
 namespace '/me' do
-  get '/followings' do
+  before do
     error 401, 'Authorize under /login first!' unless session[:soundcloud]
-    soundcloud = Soundcloud.new settings.soundcloud.merge session[:soundcloud]
-    user_id = soundcloud.get('/me').id
-    followings = soundcloud.get("/users/#{user_id}/followings")
+    @soundcloud = Soundcloud.new settings.soundcloud.merge session[:soundcloud]
+    @me = @soundcloud.get('/me')
+  end
+  
+  get '' do
+    @me.to_json
+  end
+  
+  get '/followings' do
+    followings = @soundcloud.get("/users/#{@me.id}/followings")
     followings.to_json
+  end
+  
+  get '/recommendations' do
+    recommendations = SoundcloudCache.recommendations @me.id
+    recommendations.to_json
   end
 end
 
 get '/login' do
-  redirect Soundcloud.new(settings.soundcloud).authorize_url + "&scope=non-expiring"
+  redirect Soundcloud.new(settings.soundcloud).authorize_url
 end
 
 get '/logout' do

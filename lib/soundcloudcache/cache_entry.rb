@@ -1,5 +1,5 @@
 class SoundcloudCache
-  class Relationship < Array
+  class CacheEntry < Array
     attr_accessor :expires_at
   
     def initialize()

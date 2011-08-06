@@ -4,25 +4,20 @@ describe SoundcloudCache::RelationshipCache do
   before :all do
     @result = [{
       'id' => :id,
-      'followers_count' => 10
+      'followers_count' => 10,
+      'permalink' => :stub
     }]
     @cached_result = [{
       :id => :id,
-      :popularity => Math.log10(10)
+      :permalink => :stub,
+      :popularity => 1 + Math.log10(10)
     }]
   end
   
-  it 'should get an uncached relationship and wrap it in a SoundcloudCache::Relationship' do
-    SoundcloudCache::Connection.any_instance.should_receive(:get).with('id', :relationship).and_return(@result)
-    result = SoundcloudCache::RelationshipCache.new(:relationship).get(:id)
+  it 'should fetch an uncached relationship and wrap it in a CacheEntry' do
+    SoundcloudCache::Connection.any_instance.should_receive(:get).with(:id, :relationship).and_return(@result)
+    result = SoundcloudCache::RelationshipCache.new(:relationship).fetch(:id)
     result.should == @cached_result
-    result.should be_instance_of(SoundcloudCache::Relationship)
-  end  
-  
-  it 'should return an uncached relationship without accessing the connection' do
-    SoundcloudCache::Connection.any_instance.should_receive(:get).with('id', :relationship).and_return(@result)
-    cache = SoundcloudCache::RelationshipCache.new(:relationship)
-    cache.get(:id)
-    cache.get(:id).should == @cached_result
+    result.should be_instance_of(SoundcloudCache::CacheEntry)
   end
 end

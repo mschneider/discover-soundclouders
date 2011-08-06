@@ -1,7 +1,8 @@
-require 'httmultiparty'
 require 'singleton'
+require 'soundcloudcache/base_cache'
+require 'soundcloudcache/cache_entry'
 require 'soundcloudcache/connection'
-require 'soundcloudcache/relationship'
+require 'soundcloudcache/recommendations_cache'
 require 'soundcloudcache/relationship_cache'
 
 class SoundcloudCache
@@ -13,15 +14,15 @@ class SoundcloudCache
       :client_id => ENV['CLIENT_ID'],
       :expiration_period => 24 * 60 * 60
     }
-    @caches = {}
+    @caches = { :recommendations => RecommendationsCache.new }
     self.class.relationships.each do |r|
       @caches[r] = RelationshipCache.new r
     end
   end
   
-  def get(relationship, id)
-    if self.class.relationships.include? relationship then
-      @caches[relationship].get(id)
+  def get(cache_name, id)
+    if self.class.cache_names.include? cache_name then
+      @caches[cache_name.to_sym].get(id)
     end
   end
   
@@ -33,10 +34,14 @@ class SoundcloudCache
     [:followers, :followings]
   end
   
+  def self.cache_names
+    self.relationships + [:recommendations]
+  end
+  
   class << self
-    SoundcloudCache.relationships.each do |relationship|
-      define_method relationship.to_s do |id|
-        self.instance.get(relationship, id)
+    SoundcloudCache.cache_names.each do |cache_name|
+      define_method cache_name.to_s do |id|
+        self.instance.get(cache_name, id)
       end
     end
   end

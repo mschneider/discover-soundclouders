@@ -5,69 +5,90 @@ describe 'SoundcloudProxy' do
     @app ||= Sinatra::Application
   end
   
+  before :all do
+    @base_url = 'http://example.org'
+  end
+  
   describe 'GET /' do
     it 'should redirect new users to /login' do
       get '/'
-      last_response.should be_redirected_to 'http://example.org/login'
+      last_response.should be_redirected_to "#{@base_url}/login"
     end
   end
-  
-  describe 'GET /me/followings' do
-    it 'should return an error for unauthorized users' do
-      get '/me/followings'
-      last_response.should be_client_error
-    end
-    
-    it "should return the current user's followings as json" do
-      current_user = Soundcloud::HashResponseWrapper.new({:id => 'stubid'})
-      followings = Soundcloud::ArrayResponseWrapper.new [{:stub => 1}]
-      Soundcloud.any_instance.should_receive(:get).twice do |url|
-        case url
-        when '/me'
-          current_user
-        when '/users/stubid/followings'
-          followings
-        end
-      end
-      get '/me/followings', {}, {'rack.session'=>{'soundcloud'=>{}}}
-      last_response.should be_ok
-      last_response.body.should == followings.to_json
-    end
-  end
-  
-  describe 'GET /me/recommended/:id' do   
-    it 'should return an error for unauthorized users' do
-      get '/me/recommended/1'
-      last_response.should be_client_error
-    end
-    
-    it "should return the current user's recommendations based on the given user" do
-      get '/me/rocommended/stubid'
-      last_response.should be_ok
-    end
-  end
-  
+ 
   describe 'GET /login' do
     it 'should redirect to the Soundcloud OAuth connector' do
-      Soundcloud.any_instance.should_receive(:authorize_url).and_return('http://stub/a?b=c')
+      connector_url = 'http://stub/a?b=c'
+      Soundcloud.any_instance.should_receive(:authorize_url).and_return(connector_url)
       get '/login'
-      last_response.should be_redirected_to 'http://stub/a?b=c&scope=non-expiring'
+      last_response.should be_redirected_to connector_url
     end
   end
   
   describe 'GET /oauth' do
+    before :each do
+      Soundcloud.any_instance.stub(:options).and_return({})
+    end
+    
     it 'should redirect to /' do
       Soundcloud.any_instance.stub(:exchange_token)
-      Soundcloud.any_instance.stub(:options).and_return({})
       get '/oauth'
-      last_response.should be_redirected_to 'http://example.org/'
+      last_response.should be_redirected_to "#{@base_url}/"
     end
     
     it 'should request tokens based on parameters from Soundcloud' do
-      Soundcloud.any_instance.should_receive(:exchange_token).with(:code => 'stub_code')
-      Soundcloud.any_instance.stub(:options).and_return({})
-      get '/oauth', {:code => 'stub_code'}
+      params = {:code => 'stub_code'}
+      Soundcloud.any_instance.should_receive(:exchange_token).with(params)
+      get '/oauth', params
       last_response.should_not be_an_error
     end
+  end
+  
+  describe 'GET /me' do
+    ['', '/followings', '/recommendations'].each do |path|
+      it "#{path} should return an error for unauthorized users" do
+        get "/me#{path}"
+        last_response.should be_client_error
+      end
+    end
+    
+    it 'should return the current user' do
+      current_user = Soundcloud::HashResponseWrapper.new({:id => 'stubid'})
+      Soundcloud.any_instance.should_receive(:get).with('/me').and_return(current_user)
+      get '/me', {}, {'rack.session'=>{'soundcloud'=>{}}}
+      last_response.body.should == current_user.to_json
+      last_response.should be_ok
+    end
+    
+    describe '/followings' do
+      it "should return the current user's followings as json" do
+        current_user = Soundcloud::HashResponseWrapper.new({:id => 'stubid'})
+        followings = Soundcloud::ArrayResponseWrapper.new [{:stub => 1}]
+        Soundcloud.any_instance.should_receive(:get).twice do |url|
+          case url
+          when '/me'
+            current_user
+          when '/users/stubid/followings'
+            followings
+          end
+        end
+        get '/me/followings', {}, {'rack.session'=>{'soundcloud'=>{}}}
+        last_response.body.should == followings.to_json
+        last_response.should be_ok
+      end
+    end
+
+    describe '/recommendations' do
+      it "should return the current user's recommendations" do
+        current_user = Soundcloud::HashResponseWrapper.new({:id => 'stubid'})
+        Soundcloud.any_instance.should_receive(:get).with('/me').and_return(current_user)
+        recommendations = {:stub => 1}
+        SoundcloudCache.should_receive(:recommendations).with(current_user[:id]).and_return(recommendations)
+        get '/me/recommendations', {}, {'rack.session'=>{'soundcloud'=>{}}}
+        last_response.body.should == recommendations.to_json
+        last_response.should be_ok
+      end
+    end
+
   end
 end
