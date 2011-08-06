@@ -5,6 +5,10 @@ describe 'SoundcloudProxy' do
     @app ||= Sinatra::Application
   end
   
+  def get_with_session url
+    get url, {}, {'rack.session'=>{'soundcloud'=>{}}}
+  end
+  
   before :all do
     @base_url = 'http://example.org'
   end
@@ -13,6 +17,14 @@ describe 'SoundcloudProxy' do
     it 'should redirect new users to /login' do
       get '/'
       last_response.should be_redirected_to "#{@base_url}/login"
+    end
+    
+    it 'should deliver the index.html page to logged in users' do
+      file_contents = "stub"
+      File.should_receive(:read).with(File.join('public', 'index.html')).and_return(response)
+      get_with_session '/'
+      last_response.body.should == file_contents
+      last_response.should be_ok
     end
   end
  
@@ -43,7 +55,7 @@ describe 'SoundcloudProxy' do
       last_response.should_not be_an_error
     end
   end
-  
+
   describe 'GET /me' do
     ['', '/followings', '/recommendations'].each do |path|
       it "#{path} should return an error for unauthorized users" do
@@ -55,7 +67,7 @@ describe 'SoundcloudProxy' do
     it 'should return the current user' do
       current_user = Soundcloud::HashResponseWrapper.new({:id => 'stubid'})
       Soundcloud.any_instance.should_receive(:get).with('/me').and_return(current_user)
-      get '/me', {}, {'rack.session'=>{'soundcloud'=>{}}}
+      get_with_session '/me'
       last_response.body.should == current_user.to_json
       last_response.should be_ok
     end
@@ -72,7 +84,7 @@ describe 'SoundcloudProxy' do
             followings
           end
         end
-        get '/me/followings', {}, {'rack.session'=>{'soundcloud'=>{}}}
+        get_with_session '/me/followings'
         last_response.body.should == followings.to_json
         last_response.should be_ok
       end
@@ -84,7 +96,7 @@ describe 'SoundcloudProxy' do
         Soundcloud.any_instance.should_receive(:get).with('/me').and_return(current_user)
         recommendations = {:stub => 1}
         SoundcloudCache.should_receive(:recommendations).with(current_user[:id]).and_return(recommendations)
-        get '/me/recommendations', {}, {'rack.session'=>{'soundcloud'=>{}}}
+        get_with_session '/me/recommendations'
         last_response.body.should == recommendations.to_json
         last_response.should be_ok
       end
