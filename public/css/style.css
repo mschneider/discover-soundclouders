@@ -1,0 +1,71 @@
+body {
+    font: 13px "Lucida Grande",Lucida,Arial,sans-serif
+}
+
+#user-details {
+    float: left;
+    width: 400px;
+    min-height: 500px;
+}
+
+#user-details-header img {
+/*    position: absolute;
+    left: 5px;
+    top: 5px;*/
+    float: left;
+    width: 100px;
+    height: 100px;
+    padding-right: 5px;
+}
+
+#user-details-header {
+/*    padding-left: 105px;*/
+    min-height: 110px;
+}
+
+#user-details-header h1 {
+    margin: 10px 0 0 0;
+}
+
+#user-details-header p {
+    margin: 0 0 0 0;
+}
+
+#user-tracklist {
+    display: block-inline;
+    margin-left: 20px;
+}
+
+#user-tracklist-items li {
+    list-style-type: none;
+    padding-top: 3px;
+}
+
+#user-tracklist-items img {
+    float: left;
+    width: 35px;
+    height: 35px;
+    padding: 0 3px 0 3px;
+}
+
+#user-tracklist-items h2,p {
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;    
+}
+
+#user-tracklist-items h2 {
+    font-size: 18px;
+}
+
+#user-tracklist-items p {
+    font-size: 11px;
+}
+
+#user-tracklist-tabs span {
+    margin: 0 2px 0 20px;
+    padding: 4px 7px 4px 7px
+}
+
+#user-tracklist-tabs span.selected {
+    background-color: #eee;
+} 

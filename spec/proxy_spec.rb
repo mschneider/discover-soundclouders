@@ -21,7 +21,7 @@ describe 'SoundcloudProxy' do
     
     it 'should deliver the index.html page to logged in users' do
       file_contents = "stub"
-      File.should_receive(:read).with(File.join('public', 'index.html')).and_return(response)
+      File.should_receive(:read).with(File.join('public', 'index.html')).and_return(file_contents)
       get_with_session '/'
       last_response.body.should == file_contents
       last_response.should be_ok

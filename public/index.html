@@ -11,18 +11,44 @@
     <script src="js/vendor/backbone.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0.beta2/handlebars.min.js"></script>
     <!-- <script type="text/javascript" src="http://connect.soundcloud.com/2/beta.js"></script> -->
-    <script src="js/util/position_generator.js"></script>
-    <script src="js/util/vector.js"></script>
-    <script src="js/models/node.js"></script>
-    <script src="js/views/recommendations.js"></script>
-    <script src="js/views/user.js"></script>
+    <script src="js/models/user.js"></script>
+    <script src="js/models/track.js"></script>
+    <script src="js/views/recommended_user.js"></script>
+    <script src="js/views/user_details.js"></script>
+    <script src="js/views/user_recommenders.js"></script>
+    <script src="js/views/user_tracklist.js"></script>
+    <script src="js/views/user_tracklist_items.js"></script>
+    <script src="js/views/user_tracklist_tab.js"></script>
+    <script src="js/views/user_tracklist_tabs.js"></script>
     <script src="js/app.js"></script>
   </head>
   <body>
-    <canvas id="recommendations_view"></canvas>
-    <div class="user_details" id="user_view"></div>
-    <script id="user-template" type="text/x-handlebars-template">
-      User selected!
+    <div id="recommended-user"></div>
+    <div id="player"></div>
+    <script id="user-details-template" type="text/x-handlebars-template">
+      <div id="user-details-header">
+        <img src={{avatar_url}}>
+        <h1>{{username}}</h1>
+        <p>{{full_name}}</p>
+        <p>{{country}}, {{city}}</p>
+        <p id="user-details-stats">T:{{track_count}} ♥:{{public_favorites_count}} F:{{followers_count}}
+        </span>
+      </div>
+      <span id="user-details-description">{{description}}</span>
+    </script>
+    <script id="user-tracklist-items-template" type="text/x-handlebars-template">
+      <ol>
+        {{#each items}}
+        <li>
+          <div class="img">
+            <img src={{this.artwork_url}}>
+          </div>
+          <div class="text">
+            <h2>{{this.user.username}}</h2>
+            <p>{{this.title}}</p>
+          </div>
+        {{/each}}
+      </ol>
     </script>
   </body>
 </html>
