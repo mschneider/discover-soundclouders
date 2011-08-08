@@ -2,68 +2,82 @@ body {
     font: 13px "Lucida Grande",Lucida,Arial,sans-serif
 }
 
+li {
+    list-style-type: none;
+}
+
+ol, ul {
+    padding-left: 0;
+}
+
+#header {
+    font-size: 36px;
+    min-height: 1.5em;
+    vertical-align:top;
+}
+
+#header span.symbol {
+    font-family: Arial;
+}
+
+.inline {
+    display:inline-block;
+    vertical-align:top;
+}
+
+
 #user-details {
-    float: left;
-    width: 400px;
-    min-height: 500px;
+    min-height: 100px;
 }
 
-#user-details-header img {
-/*    position: absolute;
-    left: 5px;
-    top: 5px;*/
-    float: left;
-    width: 100px;
-    height: 100px;
-    padding-right: 5px;
-}
-
-#user-details-header {
-/*    padding-left: 105px;*/
-    min-height: 110px;
-}
-
-#user-details-header h1 {
-    margin: 10px 0 0 0;
+#user-details img {
+    width: 85px;
+    height: 85px;
 }
 
 #user-details-header p {
-    margin: 0 0 0 0;
+    margin: 0.2em;
+    font-size: 16px;
 }
 
-#user-tracklist {
-    display: block-inline;
-    margin-left: 20px;
+#user-details-header span.username {
+    font-size: 35px;
 }
 
-#user-tracklist-items li {
-    list-style-type: none;
-    padding-top: 3px;
+#user-recommenders li {
+    font-size: 10px;
+    text-align: center;
+    margin: 0 1em 2em 1em;
+    height: 119px;
+    width: 100px;
+    overflow: visible;
+}
+
+#user-recommenders p {
+    margin: 0.1em 0;
 }
 
 #user-tracklist-items img {
-    float: left;
-    width: 35px;
-    height: 35px;
-    padding: 0 3px 0 3px;
-}
-
-#user-tracklist-items h2,p {
-    margin: 0 0 0 0;
-    padding: 0 0 0 0;    
-}
-
-#user-tracklist-items h2 {
-    font-size: 18px;
+    width: 33px;
+    height: 33px;
 }
 
 #user-tracklist-items p {
-    font-size: 11px;
+    margin: 0px;
+}
+
+#user-tracklist-items p.secondary {
+    font-size: 12px;;
+}
+
+#user-tracklist-items span.title {
+    font-size: 16px;
+    font-weight: bold;
 }
 
 #user-tracklist-tabs span {
-    margin: 0 2px 0 20px;
-    padding: 4px 7px 4px 7px
+    margin: 0.25em;
+    padding: 0.25em 0.5em 0.25em 0.5em;
 }
 
 #user-tracklist-tabs span.selected {

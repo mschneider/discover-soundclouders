@@ -16,11 +16,6 @@ $(function(){
       $(this.el).append(this.details.render().el);
       $(this.el).append(this.tracklist.render().el);
       $(this.el).append(this.recommenders.render().el);
-      var that = this;
-      this.model.bind('change:recommendedUser', function(model, user) { 
-        user.bind('change', function() { that.render(); });
-        that.render();
-      });
     },
     
     render: function() {
