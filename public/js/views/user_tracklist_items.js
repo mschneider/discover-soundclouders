@@ -1,5 +1,6 @@
 $(function(){
   UserTracklistItemsView = Backbone.View.extend({
+    tagName: 'ol',
     initialize: function() {
       this.template = Handlebars.compile($("#user-tracklist-items-template").html());
       var that = this;

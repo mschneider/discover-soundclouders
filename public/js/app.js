@@ -67,9 +67,12 @@ $(function(){
   
   Handlebars.registerHelper('multilineText', function(text) {
     if (!text) return '';
-    return _(text.split('\n')).reduce(function(open_p, line) {
-      return open_p + line + '</p><p>'
-    }, '<p>');
+    var inner = _(text.split('\n')).chain()
+      .without('\r')
+      .compact()
+      .join('</p><p>')
+      .value()
+    return '<p>' + inner + '</p>';
   });
   
   Handlebars.registerHelper('nameCountryCity', function(user) {

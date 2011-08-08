@@ -39,7 +39,7 @@
         <div class="inline">
           <img src={{avatar_url}}>
         </div>
-        <div class="inline">
+        <div class="inline graved">
           <p>
             <span class="username">{{username}}</span>
           </p>
@@ -59,7 +59,7 @@
     </script>
     
     <script id="user-recommenders-template" type="text/x-handlebars-template">
-      <span>This User was recommended to you based on the following Users:</span>
+      <p class="graved" id="user-recommenders-intro">This User was recommended to you based on the following Users:</p>
       <ul>
         {{#each users}}
           <li class="inline">
@@ -71,26 +71,24 @@
     </script>
     
     <script id="user-tracklist-items-template" type="text/x-handlebars-template">
-      <ol>
-        {{#each items}}
-        <li>
-          <div class="inline">
-            <img src={{#if this.artwork_url}}{{this.artwork_url}}{{else}}{{this.user.avatar_url}}{{/if}}>
-          </div>
-          <div class="inline">
-            <p>
-              <span class="title">{{this.title}}</span>
-              <span>{{#if this.hours}}{{this.hours}}:{{/if}}{{this.minutes}}:{{this.seconds}}</span>
-            </p>
-            <p class="secondary">
-              <span>by {{this.user.username}}</span>
-              <span>Plays: {{this.playback_count}}</span>
-              <span>Comments: {{this.comment_count}}</span>
-              <span>Favoritings: {{this.favoritings_count}}</span>
-            </p>
-          </div>
-        {{/each}}
-      </ol>
+      {{#each items}}
+      <li>
+        <div class="inline">
+          <img src={{#if this.artwork_url}}{{this.artwork_url}}{{else}}{{this.user.avatar_url}}{{/if}}>
+        </div>
+        <div class="inline graved">
+          <p>
+            <span class="title">{{this.title}}</span>
+            <span>{{#if this.hours}}{{this.hours}}:{{/if}}{{this.minutes}}:{{this.seconds}}</span>
+          </p>
+          <p class="secondary">
+            <span>by {{this.user.username}}</span>
+            <span>Plays: {{this.playback_count}}</span>
+            <span>Comments: {{this.comment_count}}</span>
+            <span>Favoritings: {{this.favoritings_count}}</span>
+          </p>
+        </div>
+      {{/each}}
     </script>
     
   </body>

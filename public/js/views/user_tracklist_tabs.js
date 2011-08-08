@@ -1,5 +1,8 @@
 $(function(){
   UserTracklistTabsView = Backbone.View.extend({
+    className: 'graved',
+    tagName: 'p',
+    
     initialize: function() {
       this.tracks = UserTracklistTabView.build(this.model, 'Tracks');
       this.favorites = UserTracklistTabView.build(this.model, 'Favorites');
