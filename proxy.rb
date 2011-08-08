@@ -11,7 +11,7 @@ set :show_exceptions, false
 set :soundcloud, {
   :client_id => ENV['CLIENT_ID'],
   :client_secret => ENV['CLIENT_SECRET'],
-  :redirect_uri => 'http://localhost:9292/oauth',
+  :redirect_uri => ENV['REDIRECT_URI'],
   :site => 'soundcloud.com'
 }
 
