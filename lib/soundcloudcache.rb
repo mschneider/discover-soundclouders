@@ -26,6 +26,15 @@ class SoundcloudCache
     end
   end
   
+  def stats
+    self.class.cache_names.map do | name |
+      {
+        :name => name.to_s,
+        :size => @caches[name].size
+      }
+    end
+  end
+  
   def self.options
     self.instance.options
   end

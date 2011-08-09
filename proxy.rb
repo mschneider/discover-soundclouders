@@ -69,3 +69,12 @@ namespace '/me' do
     recommendations.to_json
   end
 end
+
+get '/recommendations/:id' do
+  recommendations = SoundcloudCache.recommendations params[:id]
+  recommendations.to_json
+end
+
+get '/stats' do
+  SoundcloudCache.instance.stats.to_json
+end

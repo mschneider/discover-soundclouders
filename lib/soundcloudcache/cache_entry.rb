@@ -1,8 +1,6 @@
 class SoundcloudCache
   class CacheEntry < Array
-    attr_accessor :expires_at
-  
-    def initialize()
+    def initialize
       @expires_at = Time.now + SoundcloudCache.options[:expiration_period]
     end
   

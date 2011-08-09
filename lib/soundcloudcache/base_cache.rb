@@ -13,6 +13,10 @@ class SoundcloudCache
       raise "not implemented"
     end
     
+    def size
+      @store.count
+    end 
+    
     def get id
       id = id.to_s
       if cached? id then

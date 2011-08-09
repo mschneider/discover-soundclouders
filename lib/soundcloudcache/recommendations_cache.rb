@@ -17,8 +17,8 @@ class SoundcloudCache
       end
       # sort by importance
       importance_by_id = importance_by_id.sort {|a,b| a[1] <=> b[1]}
-      # get the ids of the 20 most important candidates
-      selected_candidate_ids = importance_by_id.last(20).map {|a| a[0]}
+      # get the ids of the 30 most important candidates
+      selected_candidate_ids = importance_by_id.last(30).map {|a| a[0]}
       result = []
       for candidate_id in selected_candidate_ids do
         result.push({
