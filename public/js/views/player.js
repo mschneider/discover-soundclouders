@@ -30,7 +30,6 @@ $(function(){
     updateState: function(state) {
       var audio = $('audio').get(0),
           controls = $('#player-controls span');
-      console.log('PlayerView::updateState', state);
       if (audio) {
         switch (state) {
           case 'playing':
