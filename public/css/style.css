@@ -47,6 +47,9 @@ ol, ul {
 #user-details-header, #player {
     padding: 18px !important;
 }
+#user-details-header {
+    white-space: nowrap;
+}
 #user-details-header img {
     width: 85px;
     height: 85px;
