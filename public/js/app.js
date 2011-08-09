@@ -1,7 +1,7 @@
 $(function(){
   Recommendations = new ApplicationController();
-  $.get('/recommendations.json', function(recommendations) {
-    Recommendations.set({ recommendedUsers: new UserList(recommendations) });
+  $.get('/me/recommendations', function(recommendations) {
+    Recommendations.set({ recommendedUsers: new UserList(JSON.parse(recommendations)) });
     Recommendations.display(0);
     $('body').empty();
     _(Views).each(function(view) {
