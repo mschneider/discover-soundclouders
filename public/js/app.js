@@ -17,7 +17,7 @@ $(function(){
         this.tryCount++;
         $.ajax(this);
       } else {
-        $('body p').html('Something seems to be wrong. Please try again later.');
+        $('body > p').html('Something seems to be wrong. Please try again later.');
       }
     }
   });
