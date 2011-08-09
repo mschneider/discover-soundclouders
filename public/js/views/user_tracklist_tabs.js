@@ -9,7 +9,7 @@ $(function(){
       $(this.el).append(this.tracks.render().el);
       $(this.el).append(this.favorites.render().el);
       var that = this;
-      this.model.bind('change:selectedTab', function() {that.render();})
+      this.model.bind('change:tracklistName', function() {that.render();})
     },
     
     render: function() {

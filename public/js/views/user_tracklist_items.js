@@ -19,7 +19,7 @@ $(function(){
     click: function(event) {
       var listitems = $(this.el).children(),
           index = listitems.index(listitems.has(event.srcElement));
-      Player.play(App.get('displayedTracks'), index);
+      Player.play(Recommendations.get('displayedTracks'), index);
     },
     
     render: function() {

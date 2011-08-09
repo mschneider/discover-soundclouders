@@ -30,4 +30,7 @@ $(function(){
       .join(', ')
       .value();
   });
+  
+  APIKey = '6c574a63595f5f55c82cd58f945f932a';
+  URLPostfix = '?client_id=' + APIKey;
 });

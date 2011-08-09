@@ -6,11 +6,11 @@ $(function(){
     },
     
     click: function() {
-      this.model.selectTab(this.text);
+      this.model.selectTracklist(this.text);
     },
     
     render: function() {
-      var selected = this.model.get('selectedTab');
+      var selected = this.model.get('tracklistName');
       $(this.el).text(this.text);
       if (selected == this.text)
         $(this.el).attr('class', 'selected');

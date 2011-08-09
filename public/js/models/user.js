@@ -7,11 +7,11 @@ $(function(){
     },
     
     baseUrl: function() {
-      return 'http://api.soundcloud.com/users/' + this.get('id')
+      return 'http://api.soundcloud.com/users/' + this.get('id');
     },
     
     url: function() {
-      return this.baseUrl() + '.json' + App.urlPostfix();
+      return this.baseUrl() + '.json' + URLPostfix;
     }
   });
   

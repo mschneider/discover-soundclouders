@@ -16,13 +16,6 @@ $(function(){
       $(this.el).append(this.details.render().el);
       $(this.el).append(this.tracklist.render().el);
       $(this.el).append(this.recommenders.render().el);
-    },
-    
-    render: function() {
-      this.details.render();
-      this.tracklist.render();
-      this.recommenders.render();
-      return this;
     }
   }); 
 });

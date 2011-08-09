@@ -11,11 +11,11 @@ $(function(){
     },
     
     backward: function() {
-      this.model.previousRecommendation();
+      this.model.displayPrevious();
     },
     
     forward: function() {
-      this.model.nextRecommendation();
+      this.model.displayNext();
     },
     
     render: function() {
