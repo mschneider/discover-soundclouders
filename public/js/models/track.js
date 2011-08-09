@@ -14,6 +14,8 @@ $(function(){
         result.minutes = '0' + result.minutes;
       if (result.hours == 0)
         result.hours = undefined;
+      if (result.streamable)
+        result.stream_url = result.stream_url + App.urlPostfix();
       return result;
     }
   });
@@ -22,7 +24,7 @@ $(function(){
     model: Track,
     
     url: function() {
-      return this.user.baseUrl() + '/' + this.type + App.urlPostfix();
+      return this.user.baseUrl() + '/' + this.type + '.json'+ App.urlPostfix();
     }
   });
   

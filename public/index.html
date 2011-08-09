@@ -13,7 +13,10 @@
     <script src="js/vendor/handlebars.1.0.0.beta.3.js"></script>
     <script src="js/models/user.js"></script>
     <script src="js/models/track.js"></script>
+    <script src="js/controllers/application.js"></script>
+    <script src="js/controllers/player.js"></script>
     <script src="js/views/header.js"></script>
+    <script src="js/views/player.js"></script>
     <script src="js/views/recommended_user.js"></script>
     <script src="js/views/user_details.js"></script>
     <script src="js/views/user_recommenders.js"></script>
@@ -25,8 +28,8 @@
   </head>
   <body>
     <div id="header"></div>
-    <div id="recommended-user"></div>
     <div id="player"></div>
+    <div id="recommended-user"></div>
     
     <script id="header-template" type="text/x-handlebars-template">
       <span>Recommendations</span>
@@ -34,10 +37,22 @@
       <span id="forward" class="symbol">►</span>
     </script>
     
+    <script id="player-template" type="text/x-handlebars-template">
+      <div id="player-controls">
+        <span class="symbol"></span>
+      </div>
+      <div id="player-waveform">
+        <div id="player-progress-load"></div>
+        <div><img src={{waveform_url}}></img></div>
+        <div id="player-progress-time"></div>
+      </div>
+      <audio src={{stream_url}}></audio>
+    </script>
+    
     <script id="user-details-template" type="text/x-handlebars-template">
       <div id="user-details-header">
         <div class="inline">
-          <img src={{avatar_url}}>
+          <img class="framed" src={{avatar_url}}>
         </div>
         <div class="inline graved">
           <p>
@@ -63,7 +78,7 @@
       <ul>
         {{#each users}}
           <li class="inline">
-            <img src={{this.avatar_url}}>
+            <img class="framed" src={{this.avatar_url}}>
             <p>{{this.username}}</p>
           </li>
         {{/each}}
@@ -72,9 +87,9 @@
     
     <script id="user-tracklist-items-template" type="text/x-handlebars-template">
       {{#each items}}
-      <li>
+      <li class={{#if this.streamable}}"streamable"{{else}}"not-streamable"{{/if}}>
         <div class="inline">
-          <img src={{#if this.artwork_url}}{{this.artwork_url}}{{else}}{{this.user.avatar_url}}{{/if}}>
+          <img class="framed" src={{#if this.artwork_url}}{{this.artwork_url}}{{else}}{{this.user.avatar_url}}{{/if}}>
         </div>
         <div class="inline graved">
           <p>

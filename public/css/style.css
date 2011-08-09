@@ -2,12 +2,6 @@ body {
     font-family: "Lucida Grande",Lucida,Arial,sans-serif;
     font-size: 13px;
 }
-img {
-    border-color: white;
-    border-style: solid;
-    border-width: 3px;
-    box-shadow: 0px 0px 8px rgba(0,0,0,0.5);
-}
 li {
     list-style-type: none;
     margin: 0 1em 0 1em;
@@ -16,6 +10,10 @@ ol, ul {
     padding: 0;
     margin: 0;
 }
+.framed {
+    border: 3px solid white;
+    box-shadow: 0px 0px 8px rgba(0,0,0,0.5);
+}
 .graved {
     text-shadow: 0px -1px 0px #111;
 }
@@ -23,28 +21,31 @@ ol, ul {
     display:inline-block;
     vertical-align:top;
 }
+.not-streamable {
+    color: #CCC;
+}
+.symbol {
+    font-family: Arial;
+    text-shadow: 0px 2px 0px #EEE;
+}
 
 #header {
     color: #333;
     font-size: 36px;
     min-height: 1.5em;
-    vertical-align:top;
     text-shadow: 0px 2px 0px #EEE;
 }
-#header span.symbol {
-    font-family: Arial;
-}
 
-#user-details {
-    min-height: 100px;
-}
-#user-details > div, #user-recommenders, #user-tracklist {
+#user-details > div, #user-recommenders, #user-tracklist, #player {
     background: #888;
     color: white;
     margin-top: 10px;
     padding: 10px;
     border-radius: 10px;
     box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+}
+#user-details-header, #player {
+    padding: 18px !important;
 }
 #user-details-header img {
     width: 85px;
@@ -72,8 +73,7 @@ p#user-tracklist-tabs {
     font-size:20px;
     margin: 0.8em 0.5em 0.7em 0.5em;
     padding-bottom: 0.9em;
-    border-bottom-style: groove;
-    border-bottom-width: 2px;
+    border-bottom: 2px groove;
 }
 #user-tracklist-tabs span {
     margin-left: 0.2em;
@@ -88,6 +88,8 @@ p#user-tracklist-tabs {
 }
 #user-tracklist-items {
     margin-bottom: 7px;
+    overflow-x: hidden;
+    white-space: nowrap;
 }
 #user-tracklist-items img {
     width: 33px;
@@ -111,11 +113,64 @@ p#user-recommenders-intro {
 #user-recommenders li {
     font-size: 10px;
     text-align: center;
-    margin-bottom: 2em;
     height: 119px;
-    width: 100px;
+    margin-bottom: 2em;
     overflow: visible;
+    width: 100px;
 }
 #user-recommenders li > p {
     margin-top: 0.1em;
+}
+
+#player {
+    margin-top: 1em;
+    white-space: nowrap;
+}
+#player-controls {
+    border: 1px solid;
+    border-radius: 100px;
+    box-shadow: 0px 0px 8px rgba(0,0,0,0.5);
+    float: left;
+    height: 70px;
+    position: relative;
+    width: 70px;
+}
+#player-controls span {
+    position: absolute;
+}
+#player-controls span.pause {
+    font-size: 30px;
+    left: 19px;
+    top: 16px;
+}
+#player-controls span.play {
+    font-size: 40px;
+    left: 21px;
+    top: 13px;
+}
+#player-waveform {
+    background: #555;
+    border: 1px solid;
+    height: 70px;
+    margin-left: 80px;
+    position: relative;
+}
+#player-waveform div {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+#player-waveform img {
+    height: inherit;
+    width: inherit;
+}
+#player-progress-load {
+    background: rgba(0, 0, 0, .3);
+}
+#player-progress-time {
+    background: rgba(255, 102, 0, .5);
+    border-right: 1px solid #F60;
+    display: none;
 }

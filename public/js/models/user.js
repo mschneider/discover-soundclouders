@@ -11,7 +11,7 @@ $(function(){
     },
     
     url: function() {
-      return this.baseUrl() + App.urlPostfix();
+      return this.baseUrl() + '.json' + App.urlPostfix();
     }
   });
   

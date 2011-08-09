@@ -1,49 +1,6 @@
 $(function(){
-  App = new (Backbone.Model.extend({
-    APIKey: '6c574a63595f5f55c82cd58f945f932a',
-    
-    currentRecommendationIndex: function() {
-      return this.get('recommendedUsers').indexOf(this.get('recommendedUser'));
-    },
-    
-    nextRecommendation: function() {
-      var index = this.currentRecommendationIndex() + 1,
-          length = this.get('recommendedUsers').length;
-      if (index >= length)
-        index -= length;
-      this.selectRecommendation(index);
-    },
-    
-    previousRecommendation: function() {      
-      var index = this.currentRecommendationIndex() - 1,
-          length = this.get('recommendedUsers').length;
-      if (index < 0)
-        index += length;
-      this.selectRecommendation(index);
-    },
-    
-    selectRecommendation: function(index) {
-      this.set({recommendedUser: this.get('recommendedUsers').at(index)});
-      this.selectTab(this.get('selectedTab') || 'Tracks');
-    },
-    
-    selectTab: function(name) {
-      var tracklist = TrackList.build(this.get('recommendedUser'), name);
-      this.set({
-        selectedTab: name,
-        displayedTracks: tracklist
-      });
-    },
-    
-    start: function(recommendedUsers) {
-      this.set({recommendedUsers: recommendedUsers});
-      this.selectRecommendation(0);
-    },
-    
-    urlPostfix: function() {
-      return '.json?client_id=' + this.APIKey;
-    }
-  }))();
+  App = new ApplicationController({ APIKey: '6c574a63595f5f55c82cd58f945f932a' });
+  Player = new PlayerController();
   
   $.get('/recommendations.json', function(recommendations) {
     console.log('received:', recommendations);
@@ -84,11 +41,15 @@ $(function(){
   });
   
   new HeaderView({
-    el: $('div#header'),
+    el: $('#header'),
     model: App
   });
+  new PlayerView({
+    el: $('#player'),
+    model: Player
+  });
   new RecommendedUserView({
-    el: $('div#recommended-user'),
+    el: $('#recommended-user'),
     model: App
   });
   console.log('views built.');
