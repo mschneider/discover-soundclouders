@@ -6,13 +6,14 @@ $(function(){
     tagName: 'ol',
     
     initialize: function() {
+      this.controller = this.model;
       this.template = Handlebars.compile($("#user-tracklist-items-template").html());
       var that = this;
-      this.model.bind('change:displayedTracks', function(model, tracklist) {
-        tracklist.bind('reset', function(updatedTracklist) {
-          that.render();
+      this.controller.bind('change:displayedTracks', function(c, tracklist) {
+        tracklist.bind('reset', function(tracklist) {
+          that.render(tracklist);
         });
-        that.render();
+        that.render(tracklist);
       });
     },
     
@@ -22,10 +23,8 @@ $(function(){
       Player.play(Recommendations.get('displayedTracks'), index);
     },
     
-    render: function() {
-      var tracks = this.model.get('displayedTracks');
-      if (tracks)
-        $(this.el).html(this.template({items: tracks.toJSON()}));
+    render: function(tracklist) {
+      $(this.el).html(this.template({items: tracklist.toJSON()}));
       return this;
     }
   }); 

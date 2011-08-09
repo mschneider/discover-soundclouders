@@ -4,12 +4,13 @@ $(function(){
     tagName: 'p',
     
     initialize: function() {
-      this.tracks = UserTracklistTabView.build(this.model, 'Tracks');
-      this.favorites = UserTracklistTabView.build(this.model, 'Favorites');
+      this.controller = this.model;
+      this.tracks = UserTracklistTabView.build(this.controller, 'Tracks');
+      this.favorites = UserTracklistTabView.build(this.controller, 'Favorites');
       $(this.el).append(this.tracks.render().el);
       $(this.el).append(this.favorites.render().el);
       var that = this;
-      this.model.bind('change:tracklistName', function() {that.render();})
+      this.controller.bind('change:tracklistName', function() { that.render(); })
     },
     
     render: function() {

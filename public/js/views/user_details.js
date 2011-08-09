@@ -1,18 +1,17 @@
 $(function(){
   UserDetailsView = Backbone.View.extend({
     initialize: function() {
+      this.controller = this.model;
       this.template = Handlebars.compile($("#user-details-template").html());
       var that = this;
-      this.model.bind('change:displayedUser', function(model, user) { 
-        user.bind('change', function() { that.render(); });
-        that.render();
+      this.controller.bind('change:displayedUser', function(c, user) { 
+        user.bind('change', function(user) { that.render(user); });
+        that.render(user);
       });
     },
     
-    render: function() {
-      var user = this.model.get('displayedUser');
-      if (user)
-        $(this.el).html(this.template(user.toJSON()));
+    render: function(user) {
+      $(this.el).html(this.template(user.toJSON()));
       return this;
     }
   }); 

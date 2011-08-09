@@ -6,21 +6,17 @@ $(function(){
     },
     
     initialize: function() {
+      this.controller = this.model;
       this.template = Handlebars.compile($("#header-template").html());
-      this.render();
+      $(this.el).html(this.template());
     },
     
     backward: function() {
-      this.model.displayPrevious();
+      this.controller.displayPrevious();
     },
     
     forward: function() {
-      this.model.displayNext();
-    },
-    
-    render: function() {
-      $(this.el).html(this.template());
-      return this;
+      this.controller.displayNext();
     }
   }); 
 });

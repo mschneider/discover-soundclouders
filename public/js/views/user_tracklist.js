@@ -9,14 +9,8 @@ $(function(){
         id: 'user-tracklist-items',
         model: this.model
       });
-      $(this.el).append(this.tabs.render().el);
-      $(this.el).append(this.items.render().el);
-    },
-    
-    render: function() {
-      this.tabs.render();
-      this.items.render();
-      return this;
+      $(this.el).append(this.tabs.el);
+      $(this.el).append(this.items.el);
     }
   }); 
 });

@@ -20,10 +20,10 @@ $(function(){
     }
   }); 
   
-  UserTracklistTabView.build = function(model, text) {
+  UserTracklistTabView.build = function(controller, text) {
     var tab = new UserTracklistTabView({
       class: 'user-tracklist-tab',
-      model: model
+      model: controller
     });
     tab.text = text;
     return tab;
