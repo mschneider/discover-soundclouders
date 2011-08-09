@@ -1,9 +1,9 @@
 $(function(){
   ApplicationController = Backbone.Model.extend({
+    
     currentIndex: function() {
       return this.get('recommendedUsers').indexOf(this.get('displayedUser'));
     },
-    
     
     displayNext: function() {
       var index = this.currentIndex() + 1,
