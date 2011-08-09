@@ -13,6 +13,8 @@ $(function(){
   Views = [
     new HeaderView({ id: 'header', model: Recommendations }),
     new PlayerView({ id: 'player', model: Player }),
-    new RecommendedUserView({ id: '#recommended-user', model: Recommendations })
+    new UserDetailsView({ id: 'user-details', model: Recommendations }),
+    new UserTracklistView({ id: 'user-tracklist', model: Recommendations }),
+    new UserRecommendersView({ id: 'user-recommenders', model: Recommendations })
   ];
 })
