@@ -11,7 +11,7 @@ class SoundcloudCache
         params[:offset] += params[:limit]
         response = self.class.get(path, {:query => params})
       end
-      result
+      result.uniq
     end
   
     def default_params
