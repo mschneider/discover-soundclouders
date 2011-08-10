@@ -91,14 +91,29 @@ describe 'SoundcloudProxy' do
     end
 
     describe '/recommendations' do
+      before :each do
+        @current_user = Soundcloud::HashResponseWrapper.new({:id => 'stubid'})
+        Soundcloud.any_instance.should_receive(:get).with('/me').and_return(@current_user)
+      end
+      
       it "should return the current user's recommendations if possible" do
-        current_user = Soundcloud::HashResponseWrapper.new({:id => 'stubid'})
-        Soundcloud.any_instance.should_receive(:get).with('/me').and_return(current_user)
         recommendations = {:stub => 1}
-        SoundcloudCache.should_receive(:recommendations).with(current_user[:id]).and_return(recommendations)
+        SoundcloudCache.should_receive(:recommendations).with(@current_user).and_return(recommendations)
         get_with_session '/me/recommendations'
         last_response.body.should == recommendations.to_json
         last_response.should be_ok
+      end
+      
+      it "should return Accepted if fetching the current user's recommendations is impossible" do
+        SoundcloudCache.should_receive(:recommendations).with(@current_user).and_return(nil)
+        get_with_session '/me/recommendations'
+        last_response.status == 202     
+      end
+      
+      it "should add the user's id to the JobQueue if fetching the current user's recommendations is impossible" do
+        SoundcloudCache.should_receive(:recommendations).with(@current_user).and_return(nil)
+        JobQueue.should_receive(:push).with(@current_user.id)
+        get_with_session '/me/recommendations'
       end
     end
   end

@@ -3,6 +3,7 @@ require 'sinatra'
 require 'sinatra/namespace'
 require 'soundcloud'
 $LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), 'lib'))
+require 'jobqueue'
 require 'soundcloudcache'
 
 set :raise_errors, true
@@ -65,16 +66,23 @@ namespace '/me' do
   end
   
   get '/recommendations' do
-    recommendations = SoundcloudCache.recommendations @me.id
-    recommendations.to_json
+    recommendations = SoundcloudCache.recommendations @me
+    if recommendations then
+      recommendations.to_json
+    else
+      JobQueue.push @me.id
+      [202, 'Computation is delayed.']
+    end
   end
 end
 
-get '/recommendations/:id' do
-  recommendations = SoundcloudCache.recommendations params[:id]
-  recommendations.to_json
+get '/job' do
+  JobQueue.pop.to_json
 end
 
 get '/stats' do
-  SoundcloudCache.instance.stats.to_json
+  {
+    :caches => SoundcloudCache.instance.stats,
+    :jobs => JobQueue.instance
+  }.to_json
 end

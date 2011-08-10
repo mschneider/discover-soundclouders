@@ -30,7 +30,7 @@ class SoundcloudCache
     end
     
     def should_fetch user
-      user[:followings_count] > 200
+      user[:followings_count] < 200
     end
   end
 end
