@@ -3,6 +3,12 @@ class SoundcloudCache
     include HTTParty
     base_uri 'api.soundcloud.com'
   
+    def get(id, relationship)
+      collect("/users/#{id.to_s}/#{relationship.to_s}.json", default_params)
+    end
+    
+    private
+  
     def collect(path, params)
       result = []
       response = self.class.get(path, {:query => params})
@@ -20,10 +26,6 @@ class SoundcloudCache
         :limit => 200,
         :offset => 0
       }
-    end
-
-    def get(id, relationship)
-      collect("/users/#{id.to_s}/#{relationship.to_s}.json", default_params)
     end
   end
 end

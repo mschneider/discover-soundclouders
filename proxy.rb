@@ -16,6 +16,26 @@ set :soundcloud, {
   :site => 'soundcloud.com'
 }
 
+helpers do
+  def recommendations user    
+    recommendations = SoundcloudCache.recommendations user
+    if recommendations then
+      recommendations.to_json
+    else
+      JobQueue.push_recommendations user
+      [202, 'Computation is delayed.']
+    end
+  end
+  
+  def only_workers
+    if (params[:worker_key] == ENV['WORKER_KEY']) then
+      yield
+    else
+      [401, "Could not authenticate."]
+    end
+  end
+end
+
 get '/' do
   redirect to '/login' unless session[:soundcloud]
   File.read(File.join('public', 'index.html'))
@@ -53,7 +73,7 @@ namespace '/me' do
   before do
     error 401 unless session[:soundcloud]
     @soundcloud = Soundcloud.new settings.soundcloud.merge session[:soundcloud]
-    @me = @soundcloud.get('/me')
+    @me = @soundcloud.get '/me'
   end
   
   get '' do
@@ -61,28 +81,47 @@ namespace '/me' do
   end
   
   get '/followings' do
-    followings = @soundcloud.get("/users/#{@me.id}/followings")
+    followings = @soundcloud.get "/users/#{@me.id}/followings"
     followings.to_json
   end
   
   get '/recommendations' do
-    recommendations = SoundcloudCache.recommendations @me
-    if recommendations then
-      recommendations.to_json
-    else
-      JobQueue.push @me.id
-      [202, 'Computation is delayed.']
+    recommendations @me
+  end
+end
+
+get '/recommendations/:id' do
+  soundcloud = Soundcloud.new settings.soundcloud
+  user = soundcloud.get "/users/#{params[:id]}"
+  recommendations user
+end
+
+put '/recommendations/:id' do
+  only_workers do
+    begin
+      data = JSON.parse request.body.read
+      SoundcloudCache.instance.caches[:recommendations].put(params[:id], data)
+      [201, 'Recommendations stored.']
+    rescue JSON::ParserError
+      [400, "Invalid Data."]
     end
   end
 end
 
 get '/job' do
-  JobQueue.pop.to_json
+  only_workers do
+    job = JobQueue.pop
+    if job then
+      job.to_json
+    else
+      [204, 'No jobs queued.']
+    end
+  end
 end
 
 get '/stats' do
   {
     :caches => SoundcloudCache.instance.stats,
-    :jobs => JobQueue.instance
+    :jobs => JobQueue.instance.length
   }.to_json
 end

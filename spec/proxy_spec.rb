@@ -92,28 +92,124 @@ describe 'SoundcloudProxy' do
 
     describe '/recommendations' do
       before :each do
-        @current_user = Soundcloud::HashResponseWrapper.new({:id => 'stubid'})
+        @current_user = Soundcloud::HashResponseWrapper.new({
+          :followings_count => 100,
+          :id => 'stubid'
+        })
         Soundcloud.any_instance.should_receive(:get).with('/me').and_return(@current_user)
       end
       
       it "should return the current user's recommendations if possible" do
-        recommendations = {:stub => 1}
+        recommendations = {:something => 1}
         SoundcloudCache.should_receive(:recommendations).with(@current_user).and_return(recommendations)
         get_with_session '/me/recommendations'
         last_response.body.should == recommendations.to_json
         last_response.should be_ok
       end
       
-      it "should return Accepted if fetching the current user's recommendations is impossible" do
-        SoundcloudCache.should_receive(:recommendations).with(@current_user).and_return(nil)
-        get_with_session '/me/recommendations'
-        last_response.status == 202     
+      describe "if the current user's recommendations can not be fetched" do
+        before :each do 
+          SoundcloudCache.should_receive(:recommendations).with(@current_user).and_return(nil)
+        end
+        
+        it 'should return Accepted' do
+          get_with_session '/me/recommendations'
+          last_response.status == 202
+        end
+        
+        it "should add the user's id to the JobQueue" do
+          JobQueue.should_receive(:push_recommendations).with(@current_user)
+          get_with_session '/me/recommendations'        
+        end
+      end
+    end
+  end
+  
+  describe 'GET /recommendations/:id' do
+    before :each do
+      @user = Soundcloud::HashResponseWrapper.new({
+        :followings_count => 100,
+        :id => 'stubid'
+      })
+      Soundcloud.any_instance.should_receive(:get).with("/users/#{@user.id}").and_return(@user)
+      @request_url = "/recommendations/#{@user.id}"
+    end
+    
+    it "should return the user's recommendations" do
+      recommendations = {:something => 1}
+      SoundcloudCache.should_receive(:recommendations).with(@user).and_return(recommendations)
+      get @request_url
+      last_response.body.should == recommendations.to_json
+      last_response.should be_ok
+    end
+    
+    describe "if the user's recommendations can not be fetched" do
+      before :each do 
+        SoundcloudCache.should_receive(:recommendations).with(@user).and_return(nil)
       end
       
-      it "should add the user's id to the JobQueue if fetching the current user's recommendations is impossible" do
-        SoundcloudCache.should_receive(:recommendations).with(@current_user).and_return(nil)
-        JobQueue.should_receive(:push).with(@current_user.id)
-        get_with_session '/me/recommendations'
+      it 'should ' do
+        get @request_url
+        last_response.status == 202
+      end
+      
+      it "should add the user's id to the JobQueue" do
+        JobQueue.should_receive(:push_recommendations).with(@user)
+        get @request_url
+      end
+    end
+  end
+  
+  describe 'PUT /recommendations/:id' do
+    it 'returns an error for non-workers' do
+      put '/recommendations/:id'
+      last_response.should be_error
+    end
+    
+    describe 'for workers' do
+      before :each do
+        @id = 'id'
+        @url = "/recommendations/#{@id}?worker_key=#{ENV['WORKER_KEY']}"
+      end
+      
+      it 'should return an error if the body is invalid json' do
+        SoundcloudCache::RecommendationsCache.any_instance.should_not_receive(:put)
+        put @url, '["key":"value]'
+        last_response.should be_error
+      end
+      
+      it 'should store the body if it is valid json' do
+        data = {'key' => 'value'}
+        SoundcloudCache::RecommendationsCache.any_instance.should_receive(:put).with(@id, data)
+        put @url, data.to_json
+        last_response.status.should == 201
+      end
+    end
+  end
+  
+  describe 'GET jobs' do
+    it 'returns an error for non-workers' do
+      get '/job'
+      last_response.should be_error
+    end
+    
+    describe 'for workers' do
+      before :all do
+        @params = { :worker_key => ENV['WORKER_KEY'] }
+      end
+    
+      it 'should return nothing if no jobs are queud' do
+        JobQueue.should_receive(:pop).and_return(nil)
+        get '/job', @params
+        last_response.status.should == 204
+      end
+    
+      it 'should remove the first job from the queue and return it' do
+        job = {:stub => 1}
+        JobQueue.should_receive(:pop).and_return(job)
+        get '/job', @params
+        last_response.body.should == job.to_json
+        last_response.should be_ok
       end
     end
   end

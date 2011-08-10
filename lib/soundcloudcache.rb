@@ -1,3 +1,4 @@
+require 'httparty'
 require 'singleton'
 require 'soundcloudcache/base_cache'
 require 'soundcloudcache/cache_entry'
@@ -20,9 +21,9 @@ class SoundcloudCache
     end
   end
   
-  def get(cache_name, id)
+  def get cache_name, user
     if self.class.cache_names.include? cache_name then
-      @caches[cache_name.to_sym].get(id)
+      @caches[cache_name.to_sym].get user
     end
   end
   
@@ -49,8 +50,8 @@ class SoundcloudCache
   
   class << self
     SoundcloudCache.cache_names.each do |cache_name|
-      define_method cache_name.to_s do |id|
-        self.instance.get(cache_name, id)
+      define_method cache_name.to_s do |user|
+        self.instance.get cache_name, user
       end
     end
   end

@@ -7,6 +7,7 @@ $(function(){
     initialize: function() {
       this.controller = this.model;
       this.template = Handlebars.compile($("#player-template").html());
+      $(this.el).html('<span class="graved">Select a Track to start the player.</span>')
       var that = this;
       this.controller.bind('change:track', function(controller, track) {
         track.bind('change', function() { that.updateTrack(track); });

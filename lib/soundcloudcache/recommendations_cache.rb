@@ -1,16 +1,19 @@
 class SoundcloudCache
   class RecommendationsCache < BaseCache
     
+    private
+    
     def fetch user
-      user_followings = SoundcloudCache.followings user[:id]
-      user_followings_ids = user_followings.map { |f| f[:id] }
+      user_followings = SoundcloudCache.followings user
+      user_followings_ids = user_followings.map {|f| f[:id]}
       importance_by_id = Hash.new 0
-      recommenders_by_id = Hash.new { [] }
-      for following in my_followings do
+      recommenders_by_id = Hash.new {[]}
+      for following in user_followings do
         puts "#{following[:permalink]}:#{following[:id]} is searched for new candidates"
-        for candidate in SoundcloudCache.followings(following[:id]) do
+        for candidate in SoundcloudCache.followings following do
           if (user[:id] != candidate[:id]) && (!user_followings.include? candidate[:id]) then
-            importance_by_id[candidate[:id]] += 1 / candidate[:popularity]
+            popularity = Math.log10(candidate[:followers_count])
+            importance_by_id[candidate[:id]] += 1 / popularity
             recommenders_by_id[candidate[:id]] += [following[:id]]
           end
         end
@@ -29,7 +32,7 @@ class SoundcloudCache
       CacheEntry.new.replace result
     end
     
-    def should_fetch user
+    def should_fetch? user
       user[:followings_count] < 200
     end
   end
