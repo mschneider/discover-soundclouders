@@ -18,7 +18,7 @@ $(function(){
         202: function() {
           window.setTimeout(function() {
             startLoad(recommendationsUrl);
-          }, 1 * 1000);
+          }, 30 * 1000);
         }
       },
       error: function() {
