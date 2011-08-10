@@ -9,20 +9,28 @@ class SoundcloudCache
       !!@store[id] && !@store[id].expired?
     end
     
-    def fetch id
+    def fetch user
       raise "not implemented"
+    end
+    
+    def should_fetch user
+      true
     end
     
     def size
       @store.count
     end 
     
-    def get id
-      id = id.to_s
+    def get user
+      id = user[:id]
       if cached? id then
         @store[id]
       else
-        @store[id] = fetch id
+        if should_fetch user then
+          @store[id] = fetch user
+        else
+          nil
+        end
       end
     end
   end

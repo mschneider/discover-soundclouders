@@ -7,9 +7,9 @@ class SoundcloudCache
       @connection = Connection.new
     end
     
-    def fetch id
+    def fetch user
       result = CacheEntry.new
-      for item in @connection.get id, @name do
+      for item in @connection.get user[:id], @name do
         result.push({
           :id => item['id'],
           :permalink => item['permalink'],

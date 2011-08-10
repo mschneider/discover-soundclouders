@@ -23,7 +23,7 @@ class SoundcloudCache
     end
 
     def get(id, relationship)
-      collect("/users/#{id}/#{relationship.to_s}.json", default_params)
+      collect("/users/#{id.to_s}/#{relationship.to_s}.json", default_params)
     end
   end
 end

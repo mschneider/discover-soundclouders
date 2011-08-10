@@ -91,7 +91,7 @@ describe 'SoundcloudProxy' do
     end
 
     describe '/recommendations' do
-      it "should return the current user's recommendations" do
+      it "should return the current user's recommendations if possible" do
         current_user = Soundcloud::HashResponseWrapper.new({:id => 'stubid'})
         Soundcloud.any_instance.should_receive(:get).with('/me').and_return(current_user)
         recommendations = {:stub => 1}
@@ -101,6 +101,5 @@ describe 'SoundcloudProxy' do
         last_response.should be_ok
       end
     end
-
   end
 end
