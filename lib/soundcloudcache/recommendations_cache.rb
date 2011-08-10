@@ -12,7 +12,7 @@ class SoundcloudCache
         puts "#{following[:permalink]}:#{following[:id]} is searched for new candidates"
         for candidate in SoundcloudCache.followings following do
           if (user[:id] != candidate[:id]) && (!user_followings.include? candidate[:id]) then
-            popularity = Math.log10(candidate[:followers_count])
+            popularity = 1 + Math.log10(candidate[:followers_count])
             importance_by_id[candidate[:id]] += 1 / popularity
             recommenders_by_id[candidate[:id]] += [following[:id]]
           end
