@@ -1,6 +1,8 @@
 require 'json'
 require 'sinatra'
 require 'sinatra/namespace'
+require 'sinatra/synchrony'
+# Sinatra::Synchrony.overload_tcpsocket!
 require 'soundcloud'
 $LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), 'lib'))
 require 'jobqueue'

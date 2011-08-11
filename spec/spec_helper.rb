@@ -1,5 +1,4 @@
 require './proxy'
-require 'fakeweb'
 require 'timecop'
 require 'rack/test'
 require 'rspec'

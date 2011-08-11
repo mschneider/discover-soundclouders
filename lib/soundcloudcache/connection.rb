@@ -1,21 +1,24 @@
 class SoundcloudCache
   class Connection
-    include HTTParty
-    base_uri 'api.soundcloud.com'
+    
+    def initialize
+      @free_connections = 100
+      @waiters = []
+    end
   
     def get(id, relationship)
       collect("/users/#{id.to_s}/#{relationship.to_s}.json", default_params)
     end
     
     private
-  
-    def collect(url, params)
+    
+    def collect path, params
       result = []
-      response = self.class.get(url, {:query => params})
-      while response.success? && !response.empty? do
+      response = query path, params 
+      while !response.empty? do 
         result += response
         params[:offset] += params[:limit]
-        response = self.class.get(url, {:query => params})
+        response = query path, params
       end
       result.uniq
     end
@@ -26,6 +29,28 @@ class SoundcloudCache
         :limit => 200,
         :offset => 0
       }
+    end
+      
+    def query path, params
+      if @free_connections > 0 then
+        @free_connections -= 1
+        begin
+          client = EM::HttpRequest.new('http://api.soundcloud.com').get({ :path => path, :query => params })
+          return JSON.parse client.response
+        rescue ::JSON::ParserError
+          puts "JSON::ParserError detected @#{path} '#{client.response[0..10]}'"
+          return []
+        ensure
+          @free_connections += 1
+          if waiter = @waiters.shift then
+            waiter.resume
+          end
+        end
+      else
+        @waiters << Fiber.current
+        Fiber.yield
+        query path, params
+      end
     end
   end
 end

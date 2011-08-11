@@ -1,12 +1,28 @@
-require 'httparty'
+require 'eventmachine'
+require 'em-http-request'
+require 'em-synchrony'
+require 'em-synchrony/em-http'
+require 'json'
 require 'singleton'
 require 'soundcloudcache/base_cache'
 require 'soundcloudcache/cache_entry'
 require 'soundcloudcache/connection'
 require 'soundcloudcache/recommendations_cache'
 require 'soundcloudcache/relationship_cache'
-# syck seems to be more resilient then psych
-YAML::ENGINE.yamler= 'syck' 
+
+module EventMachine
+  module HttpEncoding
+    def encode_request(method, uri, query, proxy)
+      query = encode_query(uri, query)
+
+      # Non CONNECT proxies require that you provide the full request
+      # uri in request header, as opposed to a relative path.
+      query = uri.join(query) if proxy
+      puts "#{method.to_s.upcase}: #{query}"
+      HTTP_REQUEST_HEADER % [method.to_s.upcase, query]
+    end
+  end
+end
 
 class SoundcloudCache
   include Singleton
