@@ -17,7 +17,7 @@ set :soundcloud, {
 }
 
 helpers do
-  def recommendations user    
+  def recommendations user
     recommendations = SoundcloudCache.recommendations user
     if recommendations then
       recommendations.to_json
@@ -37,12 +37,15 @@ helpers do
 end
 
 get '/' do
-  redirect to '/login' unless session[:soundcloud]
+  # clients having no or an expiring access token get redirected
+  redirect to '/login' unless session[:soundcloud] && !session[:soundcloud][:refresh_token]
   File.read(File.join('public', 'index.html'))
 end
 
 get '/login' do
-  redirect to Soundcloud.new(settings.soundcloud).authorize_url
+  redirect to "https://soundcloud.com/connect?scope=non-expiring&" + \
+              "client_id=#{ENV['CLIENT_ID']}&response_type=code&" + \
+              "redirect_uri=#{ENV['REDIRECT_URI']}"
 end
 
 get '/logout' do
@@ -53,9 +56,7 @@ end
 get '/oauth' do
   soundcloud_connection = Soundcloud.new settings.soundcloud
   soundcloud_connection.exchange_token :code => params[:code]
-  session[:soundcloud] = soundcloud_connection.options.select do |key,value|
-    [:access_token, :refresh_token, :expires_at].include? key
-  end
+  session[:soundcloud] = { :access_token => soundcloud_connection.options[:access_token] }
   redirect to '/'
 end
 
