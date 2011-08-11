@@ -11,8 +11,8 @@ class SoundcloudCache
       for following in user_followings do
         puts "#{following[:permalink]}:#{following[:id]} is searched for new candidates"
         for candidate in SoundcloudCache.followings following do
-          if (user[:id] != candidate[:id]) && (!user_followings.include? candidate[:id]) then
-            popularity = 1 + Math.log10(candidate[:followers_count])
+          if (user[:id] != candidate[:id]) && (!user_followings_ids.include? candidate[:id]) then
+            popularity = 1 + Math.log(candidate[:followers_count], 5)
             importance_by_id[candidate[:id]] += 1 / popularity
             recommenders_by_id[candidate[:id]] += [following[:id]]
           end

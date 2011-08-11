@@ -32,6 +32,6 @@ while true do
     result = SoundcloudCache.recommendations response['user']
     Proxy.publish response['user'], result
   else
-    sleep 1
+    sleep 10
   end
 end

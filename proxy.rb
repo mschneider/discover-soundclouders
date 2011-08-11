@@ -101,7 +101,7 @@ put '/recommendations/:id' do
   only_workers do
     begin
       data = JSON.parse request.body.read
-      SoundcloudCache.instance.caches[:recommendations].put(params[:id], data)
+      SoundcloudCache.put_recommendations params[:id], data
       [201, 'Recommendations stored.']
     rescue JSON::ParserError
       [400, "Invalid Data."]

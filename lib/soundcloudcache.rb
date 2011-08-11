@@ -5,10 +5,12 @@ require 'soundcloudcache/cache_entry'
 require 'soundcloudcache/connection'
 require 'soundcloudcache/recommendations_cache'
 require 'soundcloudcache/relationship_cache'
+# syck seems to be more resilient then psych
+YAML::ENGINE.yamler= 'syck' 
 
 class SoundcloudCache
   include Singleton
-  attr_reader :connection, :options, :caches
+  attr_reader :options, :caches
   
   def initialize
     @options = {
@@ -38,6 +40,10 @@ class SoundcloudCache
   
   def self.options
     self.instance.options
+  end
+  
+  def self.put_recommendations id, recommendations
+    instance.caches[:recommendations].put id, recommendations
   end
   
   def self.relationships

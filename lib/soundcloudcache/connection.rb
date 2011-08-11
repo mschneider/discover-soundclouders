@@ -9,13 +9,13 @@ class SoundcloudCache
     
     private
   
-    def collect(path, params)
+    def collect(url, params)
       result = []
-      response = self.class.get(path, {:query => params})
+      response = self.class.get(url, {:query => params})
       while response.success? && !response.empty? do
         result += response
         params[:offset] += params[:limit]
-        response = self.class.get(path, {:query => params})
+        response = self.class.get(url, {:query => params})
       end
       result.uniq
     end
