@@ -18,6 +18,10 @@ class Proxy
   include HTTParty
   base_uri ARGV.first
   format :json
+
+  def self.pop_job
+    get('/job', :query => {:worker_key => ENV['WORKER_KEY']})
+  end
   
   def self.publish user, result
     put("/recommendations/#{user['id']}?worker_key=#{ENV['WORKER_KEY']}", {
@@ -27,7 +31,7 @@ class Proxy
 end
 
 while true do
-  response = Proxy.get('/job')
+  response = Proxy.pop_job
   if (response && response['computation'] == 'recommendations') then
     result = SoundcloudCache.recommendations response['user']
     Proxy.publish response['user'], result
