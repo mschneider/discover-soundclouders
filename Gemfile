@@ -9,7 +9,7 @@ gem 'soundcloud', :git => 'git://github.com/mschneider/soundcloud-ruby.git'
 gem 'thin', '~> 1.2.11'
  
 group :development do
-  gem 'shotgun'
+  gem 'foreman'
 end
 
 group :test do
