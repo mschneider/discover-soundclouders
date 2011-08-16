@@ -9,9 +9,10 @@ class SoundcloudCache
       # get the ids of the 30 most important candidates
       selected_candidate_ids = importance_by_id.last(30).map {|a| a[0]}
       result = selected_candidate_ids.map do |candidate_id|
+        recommender_ids = recommenders_by_id[candidate_id].map { |id| { :id => id } }
         {
           :id => candidate_id,
-          :recommenders => recommenders_by_id[candidate_id].map { |id| { :id => id } }
+          :recommenders => recommender_ids.uniq
         }
       end
       CacheEntry.new.replace result
