@@ -10,7 +10,7 @@ $(function(){
         200: function(recommendations) {
           Recommendations.set({ recommendedUsers: new UserList(JSON.parse(recommendations)) });
           Recommendations.display(0);
-          $('body').empty();
+          $('body').children().detach();
           _(Views).each(function(view) {
             $('body').append(view.el);
           });
