@@ -1,7 +1,8 @@
 $(function(){
   PlayerView = Backbone.View.extend({
     events: {
-      'click #player-controls': 'click',
+      'click #player-controls': 'playPause',
+      'click #player-waveform > div': 'skip'
     },
     
     initialize: function() {
@@ -18,44 +19,53 @@ $(function(){
       });
     },
     
-    click: function() {
+    audio: function() {
+      return $('audio').get(0);
+    },
+    
+    playPause: function() {
       this.controller.togglePlayPause();
     },
     
+    skip: function(e) {
+      var playerWidth = $('#player-waveform img').get(0).width,
+          ratio = e.offsetX / playerWidth,
+          newTime = ratio * this.audio().duration;
+      this.audio().currentTime = newTime;
+    },
+    
     updateLoad: function() {
-      var audio = $('audio').get(0),
-          progress = audio.buffered.end(0) / audio.duration * 100;
+      var progress = this.audio().buffered.end(0) / this.audio().duration * 100;
       $('#player-progress-load').css({width: progress.toString() + '%'});
     },
     
     updateState: function(state) {
-      var audio = $('audio').get(0),
-          controls = $('#player-controls span');
-      if (audio) {
+      var controls = $('#player-controls span');
+      if (this.audio()) {
         switch (state) {
           case 'playing':
             controls.text('▌▌')
             controls.attr('class', 'pause');
-            audio.play();
+            this.audio().play();
             break;
           case 'paused':
             controls.text('►');
             controls.attr('class', 'play');
-            audio.pause();
+            this.audio().pause();
             break;
           case 'stopped':  
             controls.text('►');
             controls.attr('class', 'play');
-            audio.pause();
-            $('audio').attr('currentTime', 0);
+            this.audio().pause();
+            this.audio().currentTime = 0.0;
+            this.updateTime();
             break;
         }
       }
     },
     
     updateTime: function() {
-      var audio = $('audio').get(0),
-          progress = audio.currentTime / audio.duration * 100;
+      var progress = this.audio().currentTime / this.audio().duration * 100;
       $('#player-progress-time').css({
         display: 'block',
         width: progress.toString() + '%'
