@@ -11,7 +11,16 @@ $(function(){
           }, _.first(array).toString())
           .value();
     }
-  })
+  });
+  
+  var meaningfullName = function(user) {
+    return _([user.full_name, user.username, user.permalink]).chain()
+      .compact()
+      .first()
+      .value();
+  };
+  
+  Handlebars.registerHelper('meaningfullName', meaningfullName);
 
   Handlebars.registerHelper('multilineText', function(text) {
     if (!text) return '';
@@ -24,7 +33,7 @@ $(function(){
   });
 
   Handlebars.registerHelper('nameCountryCity', function(user) {
-    var parts = [user.full_name, user.country, user.city]
+    var parts = [meaningfullName(user), user.country, user.city]
     return _(parts).chain()
       .compact()
       .join(', ')

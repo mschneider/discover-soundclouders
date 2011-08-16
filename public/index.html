@@ -54,7 +54,9 @@
     <script id="user-details-template" type="text/x-handlebars-template">
       <div id="user-details-header">
         <div class="inline">
-          <img class="framed" src={{avatar_url}}>
+          <a href={{permalink_url}} title="Visit {{username}} on soundcloud.com">
+            <img class="framed" src={{avatar_url}}>
+          </a>
         </div>
         <div class="inline graved">
           <p>
@@ -80,8 +82,10 @@
       <ul>
         {{#each users}}
           <li class="inline">
-            <img class="framed" src={{this.avatar_url}}>
-            <p>{{this.username}}</p>
+            <a href={{this.permalink_url}} title="Visit {{this.username}} on soundcloud.com">
+              <img class="framed" src={{this.avatar_url}}>
+            </a>
+            <p>{{meaningfullName this}}</p>
           </li>
         {{/each}}
       </ul>
