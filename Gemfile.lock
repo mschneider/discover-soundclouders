@@ -19,13 +19,13 @@ GIT
 
 GIT
   remote: git://github.com/mschneider/sinatra-synchrony.git
-  revision: 60c5e9850065da807b4518ae0f1e1df5014d9200
+  revision: 08991908c6244a7e256ae4c331df9fa805aa64fe
   specs:
-    sinatra-synchrony (0.1.1)
+    mschneider-sinatra-synchrony (0.1.1)
       async-rack
-      em-http-request
+      em-http-request (>= 0.3.0)
       em-resolv-replace
-      em-synchrony
+      em-synchrony (>= 0.2.0)
       rack-fiber_pool (= 0.9.1)
       sinatra (>= 1.0)
 
@@ -89,24 +89,14 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  addressable (>= 2.2.3)
-  async-rack
   em-http-request!
-  em-resolv-replace
-  em-socksify
   em-synchrony!
-  eventmachine (>= 1.0.0.beta.3)
-  hashie
-  httmultiparty (~> 0.3.0)
-  http_parser.rb (>= 0.5.1)
-  httparty (~> 0.7.3)
-  rack-fiber_pool (= 0.9.1)
+  mschneider-sinatra-synchrony!
   rack-test (~> 0.6.1)
   rspec (~> 2.6.0)
   shotgun
   sinatra (~> 1.2.6)
   sinatra-namespace (~> 0.6.1)
-  sinatra-synchrony!
   soundcloud!
   thin (~> 1.2.11)
   timecop (~> 0.3.5)
