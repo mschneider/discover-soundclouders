@@ -2,7 +2,7 @@ class SoundcloudCache
   class Connection
     
     def initialize
-      @free_connections = 100
+      @free_connections = 40
       @waiters = []
     end
   
@@ -32,24 +32,26 @@ class SoundcloudCache
     end
       
     def query path, params
-      if @free_connections > 0 then
-        @free_connections -= 1
-        begin
-          client = EM::HttpRequest.new('http://api.soundcloud.com').get({ :path => path, :query => params })
-          return JSON.parse client.response
-        rescue ::JSON::ParserError
-          puts "JSON::ParserError detected @#{path} '#{client.response[0..10]}'"
-          return []
-        ensure
-          @free_connections += 1
-          if waiter = @waiters.shift then
-            waiter.resume
+      begin
+        if @free_connections > 0 then
+          @free_connections -= 1
+          begin
+            client = EM::HttpRequest.new('http://api.soundcloud.com' + path).get({ :query => params })
+            return JSON.parse client.response
+          ensure
+            @free_connections += 1
+            if waiter = @waiters.shift then
+              waiter.resume
+            end
           end
+        else
+          @waiters << Fiber.current
+          Fiber.yield
+          query path, params
         end
-      else
-        @waiters << Fiber.current
-        Fiber.yield
-        query path, params
+      rescue ::JSON::ParserError
+        # puts "JSON::ParserError detected @#{path} '#{client.response[0..20]}' - waiters:#{@waiters.count}"
+        return query path, params
       end
     end
   end

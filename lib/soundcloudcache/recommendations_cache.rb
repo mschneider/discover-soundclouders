@@ -18,7 +18,6 @@ class SoundcloudCache
     end
     
     def compute_candidates user, user_followings_ids, following, importance_by_id, recommenders_by_id
-      puts "#{following[:permalink]}:#{following[:id]} is searched for new candidates"
       for candidate in SoundcloudCache.followings following do
         if (user[:id] != candidate[:id]) && (!user_followings_ids.include? candidate[:id]) then
           popularity = 1 + Math.log(candidate[:followers_count], 5)

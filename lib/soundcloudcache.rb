@@ -18,7 +18,7 @@ module EventMachine
       # Non CONNECT proxies require that you provide the full request
       # uri in request header, as opposed to a relative path.
       query = uri.join(query) if proxy
-      puts "#{method.to_s.upcase}: #{query}"
+      # puts "#{method.to_s.upcase}: #{query}"
       HTTP_REQUEST_HEADER % [method.to_s.upcase, query]
     end
   end
