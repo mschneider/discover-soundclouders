@@ -93,6 +93,10 @@ namespace '/me' do
   end
 end
 
+error Errno::ETIMEDOUT do
+  [503, 'Could not finish computation in time.']
+end
+
 get '/recommendations/:id' do
   soundcloud = Soundcloud.new settings.soundcloud
   user = soundcloud.get "/users/#{params[:id]}"

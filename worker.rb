@@ -31,11 +31,15 @@ class Proxy
 end
 
 while true do
-  response = Proxy.pop_job
-  if (response && response['computation'] == 'recommendations') then
-    result = SoundcloudCache.recommendations response['user']
-    Proxy.publish response['user'], result
-  else
-    sleep 10
+  begin
+    response = Proxy.pop_job
+    if (response && response['computation'] == 'recommendations') then
+      result = SoundcloudCache.recommendations response['user']
+      Proxy.publish response['user'], result
+    else
+      sleep 10
+    end
+  rescue Exception => e
+    puts e
   end
 end
