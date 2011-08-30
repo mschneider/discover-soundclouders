@@ -4,8 +4,8 @@ gem 'em-http-request', :git => 'git://github.com/igrigorik/em-http-request.git',
 gem 'em-synchrony', :git => 'git://github.com/igrigorik/em-synchrony.git', :ref => 'f904764'
 gem 'sinatra', '~> 1.2.6'
 gem 'sinatra-namespace', '~> 0.6.1'
-gem 'mschneider-sinatra-synchrony', :git => 'git://github.com/mschneider/sinatra-synchrony.git'
-gem 'soundcloud', :git => 'git://github.com/mschneider/soundcloud-ruby.git'
+gem 'sinatra-synchrony', :git => 'git://github.com/mschneider/sinatra-synchrony.git'
+gem 'soundcloud'
 gem 'thin', '~> 1.2.11'
  
 group :development do
