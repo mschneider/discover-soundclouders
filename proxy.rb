@@ -45,9 +45,7 @@ get '/' do
 end
 
 get '/login' do
-  redirect to "https://soundcloud.com/connect?scope=non-expiring&" + \
-              "client_id=#{ENV['CLIENT_ID']}&response_type=code&" + \
-              "redirect_uri=#{ENV['REDIRECT_URI']}"
+  redirect to Soundcloud.new(settings.soundcloud).authorize_url :scope => 'non-expiring'
 end
 
 get '/logout' do
