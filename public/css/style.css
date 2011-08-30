@@ -27,17 +27,46 @@ ol, ul {
 .streamable {
     cursor: pointer;
 }
+.streamable:hover {
+/*    color: #F82;
+    text-shadow: none !important;*/
+}
 .symbol {
     cursor: pointer;
     font-family: Arial;
-    text-shadow: 0px 2px 0px #EEE;
+    text-shadow: 0px 1px 0px #EEE;
+    -webkit-user-select: none;
     user-select: none;
 }
 
 #header {
     color: #333;
-    font-size: 36px;
+    font-size: 20px;
     text-shadow: 0px 2px 0px #EEE;
+    min-height: 27px;
+    padding: 10px 0 0 10px;
+}
+#header .symbol:hover {
+    color: #F60;
+}
+
+#logout {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: #888;
+    color: white;
+    padding: 8px;
+    margin: 9px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+    text-decoration: none;
+}
+#logout:hover {
+    background: #F60;
 }
 
 #user-details > div, #user-recommenders, #user-tracklist, #player {
@@ -135,7 +164,7 @@ p#user-recommenders-intro {
     white-space: nowrap;
 }
 #player-controls {
-    border: 1px solid;
+    border: 1px solid white;
     border-radius: 100px;
     box-shadow: 0px 0px 8px rgba(0,0,0,0.5);
     cursor: pointer;
@@ -144,18 +173,22 @@ p#user-recommenders-intro {
     position: relative;
     width: 70px;
 }
-#player-controls span {
+#player-controls:hover {
+    border-color: #F60;
+}
+#player-controls a {
     position: absolute;
+    text-shadow: none;
 }
-#player-controls span.pause {
+#player-controls .pause {
     font-size: 30px;
-    left: 19px;
-    top: 16px;
+    top: 18px;
+    left: 20px;
 }
-#player-controls span.play {
+#player-controls .play {
     font-size: 40px;
-    left: 21px;
     top: 13px;
+    left: 19px;
 }
 #player-waveform {
     background: #555;

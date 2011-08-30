@@ -34,14 +34,17 @@
     </p>
     
     <script id="header-template" type="text/x-handlebars-template">
-      <span>Up to 30 Soundclouders you do not follow, but maybe should</span>
-      <span id="backward" class="symbol">◄</span>
-      <span id="forward" class="symbol">►</span>
+      <span>
+        Up to 30 Soundclouders you do not follow, but maybe should
+        <a id="backward" class="symbol">◄</a>
+        <a id="forward" class="symbol">►</a>
+      </span>
+      <a href="/logout" id="logout" class="graved">logout</a>
     </script>
     
     <script id="player-template" type="text/x-handlebars-template">
       <div id="player-controls">
-        <span class="symbol"></span>
+        <a class="symbol"></a>
       </div>
       <div id="player-waveform">
         <div id="player-progress-load"></div>

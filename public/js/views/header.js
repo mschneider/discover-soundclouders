@@ -1,8 +1,8 @@
 $(function(){
   HeaderView = Backbone.View.extend({
     events: {      
-      'click span#backward' : 'backward',
-      'click span#forward' : 'forward'
+      'click #backward' : 'backward',
+      'click #forward' : 'forward'
     },
     
     initialize: function() {

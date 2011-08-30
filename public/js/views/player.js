@@ -40,22 +40,22 @@ $(function(){
     },
     
     updateState: function(state) {
-      var controls = $('#player-controls span');
+      var controls = $('#player-controls a');
       if (this.audio()) {
         switch (state) {
           case 'playing':
             controls.text('▌▌')
-            controls.attr('class', 'pause');
+            controls.addClass('pause').removeClass('play');
             this.audio().play();
             break;
           case 'paused':
             controls.text('►');
-            controls.attr('class', 'play');
+            controls.addClass('play').removeClass('pause');
             this.audio().pause();
             break;
           case 'stopped':  
             controls.text('►');
-            controls.attr('class', 'play');
+            controls.addClass('play').removeClass('pause');
             this.audio().pause();
             this.audio().currentTime = 0.0;
             this.updateTime();
