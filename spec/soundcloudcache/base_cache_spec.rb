@@ -7,9 +7,14 @@ describe SoundcloudCache::BaseCache do
     @user = { :id => :stub_id }
   end
   
+  it 'should be empty on intitialization' do
+    @cache.size.should == 0
+  end
+  
   it 'should fetch if the value is not cached' do
     @cache.should_receive(:fetch).with(@user).and_return(@entry)
     @cache.get(@user).should == @entry
+    @cache.size.should == 1
   end
   
   it 'should not fetch if the value is already cached' do
@@ -17,4 +22,19 @@ describe SoundcloudCache::BaseCache do
     @cache.get(@user) # get once to fetch into cache
     @cache.get(@user).should == @entry
   end
+  
+  it 'should remove the value if it was deleted' do
+    @cache.should_receive(:fetch).with(@user).and_return(@entry)
+    @cache.get(@user)
+    @cache.delete(@user)
+    @cache.size.should == 0
+  end
+  
+  it 'should fetch the value again if it was deleted' do
+    @cache.should_receive(:fetch).twice.with(@user).and_return(@entry)
+    @cache.get(@user)
+    @cache.delete(@user)
+    @cache.get(@user).should == @entry
+  end
+  
 end

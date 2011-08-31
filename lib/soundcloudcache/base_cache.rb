@@ -13,6 +13,10 @@ class SoundcloudCache
       end
     end
     
+    def delete user
+      @store.delete id(user)
+    end
+    
     def put id, data
       @store[id.to_s] = CacheEntry.new.replace data
     end

@@ -39,12 +39,18 @@ class SoundcloudCache
     end
   end
   
+  def delete cache_name, user
+    if self.class.cache_names.include? cache_name then
+      @caches[cache_name.to_sym].delete user
+    end
+  end
+  
   def get cache_name, user
     if self.class.cache_names.include? cache_name then
       @caches[cache_name.to_sym].get user
     end
   end
-  
+
   def stats
     self.class.cache_names.map do | name |
       {

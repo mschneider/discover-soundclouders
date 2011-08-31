@@ -10,6 +10,11 @@ describe 'SoundcloudCache' do
       SoundcloudCache.instance.caches[cache_name].should_receive(:get).with(@user).and_return(:result)
       SoundcloudCache.send(cache_name, @user).should == :result
     end
+    
+    it "should delete entries from its #{cache_name.to_s} cache" do
+      SoundcloudCache.instance.caches[cache_name].should_receive(:delete).with(@user)
+      SoundcloudCache.instance.delete cache_name, @user
+    end
   end
   
   it 'should return nil when accessing unknown caches' do
