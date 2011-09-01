@@ -39,6 +39,10 @@ ol, ul {
     user-select: none;
 }
 
+#loading {
+    font-size: 16px;
+}
+
 #header {
     color: #333;
     font-size: 20px;

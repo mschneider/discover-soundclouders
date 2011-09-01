@@ -5,7 +5,8 @@ $(function(){
     $.ajax({
       url: recommendationsUrl,
       tryCount: 0,
-      retryLimit: 60, // 30 minutes of 503s
+      retryInterval: 2 * 60 * 1000,
+      retryLimit: 15, // 30 minutes of 503s
       statusCode: {
         200: function(recommendations) {
           Recommendations.set({ recommendedUsers: new UserList(JSON.parse(recommendations)) });
@@ -18,7 +19,7 @@ $(function(){
         202: function() {
           window.setTimeout(function() {
             startLoad(recommendationsUrl);
-          }, 30 * 1000);
+          }, this.retryInterval);
         }
       },
       error: function() {
@@ -27,9 +28,9 @@ $(function(){
           var ajax = $.ajax, that = this;
           window.setTimeout(function() {
             ajax(that);
-          }, 2 * 60 * 1000);
+          }, this.retryInterval);
         } else {
-          $('body > p').html('Something seems to be wrong. Please try again later.');
+          $('#loading').html('Something seems to be wrong. Please try again later.');
         }
       }
     });
