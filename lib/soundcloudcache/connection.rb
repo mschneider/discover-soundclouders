@@ -46,7 +46,6 @@ class SoundcloudCache
     def request path, params
       if @free_connections > 0 then
         @free_connections -= 1
-        puts "#{path[7..13]}: requesting (#{@free_connections} free / #{@waiters.count} waiting)"
         begin
           client = EM::HttpRequest.new('http://api.soundcloud.com' + path).get({ :query => params })
           return client.response
