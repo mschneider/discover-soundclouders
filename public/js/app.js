@@ -24,7 +24,10 @@ $(function(){
       error: function() {
         if (this.tryCount <= this.retryLimit) {
           this.tryCount++;
-          $.ajax(this);
+          var ajax = $.ajax, that = this;
+          window.setTimeout(function() {
+            ajax(that);
+          }, 2 * 60 * 1000);
         } else {
           $('body > p').html('Something seems to be wrong. Please try again later.');
         }
