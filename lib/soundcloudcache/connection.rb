@@ -14,15 +14,15 @@ class SoundcloudCache
     
     def collect path, params
       result = []
-      response = query path, params 
+      response = fetch path, params
       while !response.empty? do 
         result += response
         params[:offset] += params[:limit]
-        response = query path, params
+        response = fetch path, params
       end
       result.uniq
     end
-  
+    
     def default_params
       {
         :client_id => SoundcloudCache.options[:client_id],
@@ -30,28 +30,36 @@ class SoundcloudCache
         :offset => 0
       }
     end
-      
-    def query path, params
+    
+    def fetch path, params
       begin
-        if @free_connections > 0 then
-          @free_connections -= 1
-          begin
-            client = EM::HttpRequest.new('http://api.soundcloud.com' + path).get({ :query => params })
-            return JSON.parse client.response
-          ensure
-            @free_connections += 1
-            if waiter = @waiters.shift then
-              waiter.resume
-            end
+        response = request(path, params)
+        result = RelationshipParser.parse response
+        response.clear
+        return result
+      rescue
+        puts "exception detected: #{$!}"
+        retry
+      end
+    end
+    
+    def request path, params
+      if @free_connections > 0 then
+        @free_connections -= 1
+        puts "#{path[7..13]}: requesting (#{@free_connections} free / #{@waiters.count} waiting)"
+        begin
+          client = EM::HttpRequest.new('http://api.soundcloud.com' + path).get({ :query => params })
+          return client.response
+        ensure
+          @free_connections += 1
+          if waiter = @waiters.shift then
+            waiter.resume
           end
-        else
-          @waiters << Fiber.current
-          Fiber.yield
-          query path, params
         end
-      rescue ::JSON::ParserError
-        # puts "JSON::ParserError detected @#{path} '#{client.response[0..20]}' - waiters:#{@waiters.count}"
-        return query path, params
+      else
+        @waiters << Fiber.current
+        Fiber.yield
+        request path, params #aka retry
       end
     end
   end

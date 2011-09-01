@@ -8,15 +8,7 @@ class SoundcloudCache
     end
     
     def fetch user
-      result = CacheEntry.new
-      for item in @connection.get id(user), @name do
-        compressed_item = {}
-        for key in stored_attributes do 
-          compressed_item[key] = item[key.to_s]
-        end
-        result.push compressed_item
-      end
-      result
+      CacheEntry.new.replace @connection.get id(user), @name
     end
     
     private

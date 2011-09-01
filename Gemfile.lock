@@ -29,6 +29,12 @@ GIT
       rack-fiber_pool (= 0.9.1)
       sinatra (>= 1.0)
 
+GIT
+  remote: git://github.com/mschneider/yajl-ruby.git
+  revision: 1ddff21a3109748a1631acb4ab291a8841117ff2
+  specs:
+    yajl-ruby (0.8.3)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -65,6 +71,7 @@ GEM
     rspec-expectations (2.6.0)
       diff-lcs (~> 1.1.2)
     rspec-mocks (2.6.0)
+    ruby-prof (0.10.8)
     sinatra (1.2.6)
       rack (~> 1.1)
       tilt (< 2.0, >= 1.2.2)
@@ -92,9 +99,11 @@ DEPENDENCIES
   foreman
   rack-test (~> 0.6.1)
   rspec (~> 2.6.0)
+  ruby-prof
   sinatra (~> 1.2.6)
   sinatra-namespace (~> 0.6.1)
   sinatra-synchrony!
   soundcloud
   thin (~> 1.2.11)
   timecop (~> 0.3.5)
+  yajl-ruby!

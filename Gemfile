@@ -7,9 +7,11 @@ gem 'sinatra-namespace', '~> 0.6.1'
 gem 'sinatra-synchrony', :git => 'git://github.com/mschneider/sinatra-synchrony.git'
 gem 'soundcloud'
 gem 'thin', '~> 1.2.11'
+gem 'yajl-ruby', :git => 'git://github.com/mschneider/yajl-ruby.git'
  
 group :development do
   gem 'foreman'
+  gem 'ruby-prof'
 end
 
 group :test do

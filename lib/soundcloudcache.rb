@@ -9,6 +9,7 @@ require 'soundcloudcache/cache_entry'
 require 'soundcloudcache/connection'
 require 'soundcloudcache/recommendations_cache'
 require 'soundcloudcache/relationship_cache'
+require 'soundcloudcache/relationship_parser'
 
 module EventMachine
   module HttpEncoding
