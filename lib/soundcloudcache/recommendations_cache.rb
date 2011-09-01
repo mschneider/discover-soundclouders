@@ -1,16 +1,6 @@
 class SoundcloudCache
   class RecommendationsCache < BaseCache
     
-    def get user
-      result = super user
-      if result then
-        for following in SoundcloudCache.followings user do
-          SoundcloudCache.instance.delete :followings, following
-        end
-      end
-      result
-    end
-    
     private
     
     def build_result importance_by_id, recommenders_by_id
